@@ -1,5 +1,6 @@
 <template>
-  <el-container class="app-layout">
+  <router-view v-if="$route.path === '/login'" />
+  <el-container v-else class="app-layout">
     <el-aside :width="isCollapsed ? '64px' : '220px'" class="app-aside">
       <div class="logo" @click="$router.push('/')">
         <span v-if="!isCollapsed" class="logo-text">DF Monitor</span>
@@ -34,6 +35,10 @@
           <el-icon><DataAnalysis /></el-icon>
           <template #title>报表统计</template>
         </el-menu-item>
+        <el-menu-item v-if="isAdmin" index="/users">
+          <el-icon><UserFilled /></el-icon>
+          <template #title>用户管理</template>
+        </el-menu-item>
       </el-menu>
       <div class="collapse-btn" @click="isCollapsed = !isCollapsed">
         <el-icon><Fold v-if="!isCollapsed" /><Expand v-else /></el-icon>
@@ -42,6 +47,12 @@
     <el-container>
       <el-header class="app-header">
         <h3>{{ $route.meta.title }}</h3>
+        <div class="header-right">
+          <span class="username">{{ userInfo.nickname || userInfo.username }}</span>
+          <el-button link @click="handleLogout">
+            <el-icon><SwitchButton /></el-icon> 退出
+          </el-button>
+        </div>
       </el-header>
       <el-main class="app-main">
         <router-view />
@@ -51,13 +62,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   Monitor, User, Wallet, Picture, DataAnalysis,
-  Fold, Expand
+  Fold, Expand, UserFilled, SwitchButton
 } from '@element-plus/icons-vue'
 
+const router = useRouter()
 const isCollapsed = ref(false)
+
+const userInfo = computed(() => {
+  try {
+    return JSON.parse(localStorage.getItem('userInfo') || '{}')
+  } catch {
+    return {}
+  }
+})
+
+const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
+
+function handleLogout() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('userInfo')
+  router.push('/login')
+}
 </script>
 
 <style scoped>
@@ -134,6 +163,7 @@ const isCollapsed = ref(false)
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 24px;
   height: 56px;
 }
@@ -141,6 +171,17 @@ const isCollapsed = ref(false)
 .app-header h3 {
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .app-main {

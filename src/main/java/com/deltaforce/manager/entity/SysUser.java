@@ -8,43 +8,35 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 @Data
-@TableName("game_account")
+@TableName("sys_user")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class GameAccount implements Serializable {
+public class SysUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-    private String accountName;
+    private String username;
 
-    private String gameName;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
-    private String deviceId;
+    private String nickname;
 
-    private String deviceToken;
-
-    private String deviceModel;
+    private String role;
 
     private Integer status;
-
-    private Long userId;
-
-    private String remark;
-
-    private String createBy;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-
-    private String updateBy;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT_UPDATE)

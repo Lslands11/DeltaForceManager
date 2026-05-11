@@ -8,11 +8,14 @@ import com.deltaforce.manager.constant.GameMonitorConstants;
 import com.deltaforce.manager.dto.ManualBalanceRequest;
 import com.deltaforce.manager.dto.Result;
 import com.deltaforce.manager.entity.GameBalanceRecord;
+import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameBalanceRecordService;
+import com.deltaforce.manager.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/balance")
@@ -21,6 +24,8 @@ public class BalanceRecordController {
 
     @Resource
     private IGameBalanceRecordService balanceRecordService;
+    @Resource
+    private IGameAccountService gameAccountService;
 
     @GetMapping("/list")
     public Result<IPage<GameBalanceRecord>> queryPageList(
@@ -31,6 +36,15 @@ public class BalanceRecordController {
         LambdaQueryWrapper<GameBalanceRecord> wrapper = new LambdaQueryWrapper<>();
         if (accountId != null) {
             wrapper.eq(GameBalanceRecord::getAccountId, accountId);
+        }
+        // 非管理员只能看到自己名下账号的余额记录
+        if (!SecurityUtil.isAdmin()) {
+            Long userId = SecurityUtil.getCurrentUserId();
+            List<Long> accountIds = gameAccountService.getAccountIdsByUserId(userId);
+            if (accountIds.isEmpty()) {
+                return Result.OK(new Page<>(pageNo, pageSize));
+            }
+            wrapper.in(GameBalanceRecord::getAccountId, accountIds);
         }
         wrapper.orderByDesc(GameBalanceRecord::getRecordTime);
 

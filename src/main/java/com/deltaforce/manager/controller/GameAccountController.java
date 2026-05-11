@@ -9,6 +9,7 @@ import com.deltaforce.manager.entity.GameAccount;
 import com.deltaforce.manager.entity.GameOcrConfig;
 import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameOcrConfigService;
+import com.deltaforce.manager.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -40,6 +41,11 @@ public class GameAccountController {
         if (status != null) {
             wrapper.eq(GameAccount::getStatus, status);
         }
+        // 非管理员只能看到自己名下的账号
+        if (!SecurityUtil.isAdmin()) {
+            Long userId = SecurityUtil.getCurrentUserId();
+            wrapper.eq(GameAccount::getUserId, userId);
+        }
         wrapper.orderByDesc(GameAccount::getCreateTime);
 
         Page<GameAccount> page = new Page<>(pageNo, pageSize);
@@ -51,6 +57,10 @@ public class GameAccountController {
     public Result<String> add(@RequestBody GameAccount gameAccount) {
         if (gameAccount.getDeviceToken() == null || gameAccount.getDeviceToken().isEmpty()) {
             gameAccount.setDeviceToken(gameAccountService.generateDeviceToken());
+        }
+        // 非管理员添加账号时自动绑定到当前用户
+        if (!SecurityUtil.isAdmin() && gameAccount.getUserId() == null) {
+            gameAccount.setUserId(SecurityUtil.getCurrentUserId());
         }
         gameAccountService.save(gameAccount);
         return Result.OK("添加成功！");

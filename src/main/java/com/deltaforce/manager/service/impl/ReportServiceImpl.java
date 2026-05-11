@@ -77,7 +77,26 @@ public class ReportServiceImpl implements IReportService {
     public MultiAccountSummaryVO getMultiAccountSummary() {
         List<GameAccount> accounts = accountService.list(new LambdaQueryWrapper<GameAccount>()
                 .eq(GameAccount::getStatus, 1));
+        return buildMultiAccountSummary(accounts);
+    }
 
+    @Override
+    public MultiAccountSummaryVO getMultiAccountSummaryByUserId(Long userId) {
+        List<Long> accountIds = accountService.getAccountIdsByUserId(userId);
+        if (accountIds.isEmpty()) {
+            MultiAccountSummaryVO empty = new MultiAccountSummaryVO();
+            empty.setTotalBalance(BigDecimal.ZERO);
+            empty.setTotalDailyProfit(BigDecimal.ZERO);
+            empty.setAccounts(new ArrayList<>());
+            return empty;
+        }
+        List<GameAccount> accounts = accountService.list(new LambdaQueryWrapper<GameAccount>()
+                .eq(GameAccount::getStatus, 1)
+                .in(GameAccount::getId, accountIds));
+        return buildMultiAccountSummary(accounts);
+    }
+
+    private MultiAccountSummaryVO buildMultiAccountSummary(List<GameAccount> accounts) {
         LocalDate today = LocalDate.now();
         Date todayStart = toDate(today.atStartOfDay());
 
@@ -158,6 +177,28 @@ public class ReportServiceImpl implements IReportService {
 
     @Override
     public ProfitReportVO getProfitSummary(String period, int offset) {
+        List<GameAccount> accounts = accountService.list(new LambdaQueryWrapper<GameAccount>()
+                .eq(GameAccount::getStatus, 1));
+        return buildProfitReport(period, offset, accounts);
+    }
+
+    @Override
+    public ProfitReportVO getProfitSummaryByUserId(String period, int offset, Long userId) {
+        List<Long> accountIds = accountService.getAccountIdsByUserId(userId);
+        if (accountIds.isEmpty()) {
+            ProfitReportVO empty = new ProfitReportVO();
+            empty.setPeriod(period);
+            empty.setTotalProfit(BigDecimal.ZERO);
+            empty.setAccounts(new ArrayList<>());
+            return empty;
+        }
+        List<GameAccount> accounts = accountService.list(new LambdaQueryWrapper<GameAccount>()
+                .eq(GameAccount::getStatus, 1)
+                .in(GameAccount::getId, accountIds));
+        return buildProfitReport(period, offset, accounts);
+    }
+
+    private ProfitReportVO buildProfitReport(String period, int offset, List<GameAccount> accounts) {
         LocalDate now = LocalDate.now();
         LocalDate periodStart;
         LocalDate periodEnd;
@@ -177,9 +218,6 @@ public class ReportServiceImpl implements IReportService {
 
         Date start = toDate(periodStart.atStartOfDay());
         Date end = toDate(periodEnd.atTime(LocalTime.MAX));
-
-        List<GameAccount> accounts = accountService.list(new LambdaQueryWrapper<GameAccount>()
-                .eq(GameAccount::getStatus, 1));
 
         ProfitReportVO report = new ProfitReportVO();
         report.setPeriod(period);

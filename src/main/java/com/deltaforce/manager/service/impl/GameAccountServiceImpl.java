@@ -8,7 +8,9 @@ import com.deltaforce.manager.mapper.GameAccountMapper;
 import com.deltaforce.manager.service.IGameAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class GameAccountServiceImpl extends ServiceImpl<GameAccountMapper, GameAccount> implements IGameAccountService {
@@ -24,5 +26,15 @@ public class GameAccountServiceImpl extends ServiceImpl<GameAccountMapper, GameA
     @Override
     public String generateDeviceToken() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    @Override
+    public List<Long> getAccountIdsByUserId(Long userId) {
+        return list(new LambdaQueryWrapper<GameAccount>()
+                .eq(GameAccount::getUserId, userId)
+                .select(GameAccount::getId))
+                .stream()
+                .map(GameAccount::getId)
+                .collect(Collectors.toList());
     }
 }

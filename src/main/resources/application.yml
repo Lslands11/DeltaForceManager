@@ -24,3 +24,7 @@ game-monitor:
     language: eng
   upload:
     path: D:/uploads/screenshots
+
+jwt:
+  secret: DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction
+  expiration: 86400000

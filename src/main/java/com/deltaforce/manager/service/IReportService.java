@@ -14,4 +14,8 @@ public interface IReportService {
     AccountBalanceTrendVO getAccountTrend(Long accountId, int days);
 
     ProfitReportVO getProfitSummary(String period, int offset);
+
+    MultiAccountSummaryVO getMultiAccountSummaryByUserId(Long userId);
+
+    ProfitReportVO getProfitSummaryByUserId(String period, int offset, Long userId);
 }

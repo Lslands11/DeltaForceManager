@@ -8,9 +8,11 @@ import com.deltaforce.manager.constant.GameMonitorConstants;
 import com.deltaforce.manager.dto.Result;
 import com.deltaforce.manager.entity.GameBalanceRecord;
 import com.deltaforce.manager.entity.GameScreenshotLog;
+import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameBalanceRecordService;
 import com.deltaforce.manager.service.IGameScreenshotLogService;
 import com.deltaforce.manager.service.IOcrProcessService;
+import com.deltaforce.manager.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -29,6 +31,8 @@ public class ScreenshotLogController {
     private IOcrProcessService ocrProcessService;
     @Resource
     private IGameBalanceRecordService balanceRecordService;
+    @Resource
+    private IGameAccountService gameAccountService;
 
     @GetMapping("/list")
     public Result<IPage<GameScreenshotLog>> queryPageList(
@@ -44,6 +48,15 @@ public class ScreenshotLogController {
         if (ocrStatus != null) {
             wrapper.eq(GameScreenshotLog::getOcrStatus, ocrStatus);
         }
+        // 非管理员只能看到自己名下账号的截图
+        if (!SecurityUtil.isAdmin()) {
+            Long userId = SecurityUtil.getCurrentUserId();
+            List<Long> accountIds = gameAccountService.getAccountIdsByUserId(userId);
+            if (accountIds.isEmpty()) {
+                return Result.OK(new Page<>(pageNo, pageSize));
+            }
+            wrapper.in(GameScreenshotLog::getAccountId, accountIds);
+        }
         wrapper.orderByDesc(GameScreenshotLog::getUploadTime);
 
         Page<GameScreenshotLog> page = new Page<>(pageNo, pageSize);
@@ -54,6 +67,14 @@ public class ScreenshotLogController {
     @GetMapping("/pendingReview")
     public Result<List<GameScreenshotLog>> pendingReview() {
         List<GameScreenshotLog> list = screenshotLogService.listPendingReview();
+        // 非管理员只看自己名下账号的待审核
+        if (!SecurityUtil.isAdmin()) {
+            Long userId = SecurityUtil.getCurrentUserId();
+            List<Long> accountIds = gameAccountService.getAccountIdsByUserId(userId);
+            list = list.stream()
+                    .filter(s -> accountIds.contains(s.getAccountId()))
+                    .toList();
+        }
         return Result.OK(list);
     }
 
