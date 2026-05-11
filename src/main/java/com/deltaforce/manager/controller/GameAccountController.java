@@ -11,7 +11,7 @@ import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameOcrConfigService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;

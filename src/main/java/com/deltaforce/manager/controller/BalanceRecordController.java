@@ -11,7 +11,7 @@ import com.deltaforce.manager.entity.GameBalanceRecord;
 import com.deltaforce.manager.service.IGameBalanceRecordService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 
 @RestController

@@ -13,7 +13,7 @@ import com.deltaforce.manager.service.IGameScreenshotLogService;
 import com.deltaforce.manager.service.IOcrProcessService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;

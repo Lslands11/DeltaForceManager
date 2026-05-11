@@ -8,7 +8,7 @@ import com.deltaforce.manager.constant.GameMonitorConstants;
 import com.deltaforce.manager.entity.GameOcrConfig;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 
