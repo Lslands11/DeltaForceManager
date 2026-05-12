@@ -13,7 +13,6 @@
     <!-- Table -->
     <div class="table-container">
       <el-table :data="tableData" v-loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="username" label="用户名" min-width="120" />
         <el-table-column prop="nickname" label="昵称" min-width="120" />
         <el-table-column label="角色" width="100">

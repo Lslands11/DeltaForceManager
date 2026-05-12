@@ -1,10 +1,20 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '../router'
+import JSONBig from 'json-bigint'
+
+const jsonBig = JSONBig({ storeAsString: true })
 
 const request = axios.create({
   baseURL: '/api',
-  timeout: 30000
+  timeout: 30000,
+  transformResponse: [function (data) {
+    try {
+      return jsonBig.parse(data)
+    } catch {
+      return data
+    }
+  }]
 })
 
 // 请求拦截器 - 添加 Authorization header
