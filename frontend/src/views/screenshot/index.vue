@@ -12,7 +12,7 @@
       type="warning"
       show-icon
       :closable="false"
-      style="margin-bottom: 16px;"
+      class="section-gap"
     >
       <template #default>
         <el-button type="warning" size="small" @click="showPending = true">查看待审核</el-button>
@@ -20,7 +20,7 @@
     </el-alert>
 
     <!-- Filters -->
-    <div class="card" style="margin-bottom: 16px;">
+    <div class="filter-bar">
       <el-form inline>
         <el-form-item label="账号">
           <el-select v-model="query.accountId" placeholder="全部账号" clearable style="width: 200px;" @change="loadData">
@@ -35,11 +35,14 @@
             <el-option label="待审核" :value="3" />
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="uploadDialogVisible = true">上传截图</el-button>
+        </el-form-item>
       </el-form>
     </div>
 
     <!-- Table -->
-    <div class="card">
+    <div class="table-container">
       <el-table :data="tableData" v-loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column label="账号" min-width="120">
@@ -85,7 +88,7 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+      <div class="table-pagination">
         <el-pagination
           v-model:current-page="query.pageNo"
           v-model:page-size="query.pageSize"
@@ -100,7 +103,7 @@
 
     <!-- Pending Review Drawer -->
     <el-drawer v-model="showPending" title="待审核截图" size="500px">
-      <div v-if="pendingList.length === 0" style="text-align: center; color: var(--text-secondary); padding: 40px;">
+      <div v-if="pendingList.length === 0" class="empty-state">
         暂无待审核记录
       </div>
       <div v-for="item in pendingList" :key="item.id" class="pending-item">
@@ -115,9 +118,42 @@
       </div>
     </el-drawer>
 
+    <!-- Upload Dialog -->
+    <el-dialog v-model="uploadDialogVisible" title="上传截图" width="460px" @close="resetUploadForm">
+      <el-form label-width="80px">
+        <el-form-item label="账号" required>
+          <el-select v-model="uploadForm.accountId" placeholder="请选择账号" style="width: 100%;">
+            <el-option v-for="a in accountOptions" :key="a.id" :label="a.accountName" :value="a.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="截图" required>
+          <el-upload
+            ref="uploadRef"
+            :auto-upload="false"
+            :limit="1"
+            accept="image/*"
+            :on-change="handleFileChange"
+            :on-remove="handleFileRemove"
+            :file-list="uploadForm.fileList"
+          >
+            <el-button type="primary">选择图片</el-button>
+            <template #tip>
+              <div style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin-top: var(--space-xs);">
+                支持 jpg/png 格式，最大 20MB
+              </div>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="uploadDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleUpload" :loading="uploading">上传并解析</el-button>
+      </template>
+    </el-dialog>
+
     <!-- Review Dialog -->
     <el-dialog v-model="reviewVisible" title="人工审核" width="400px">
-      <p style="margin-bottom: 16px; color: var(--text-secondary);">
+      <p style="margin-bottom: var(--space-md); color: var(--color-text-secondary);">
         截图ID: {{ reviewItem?.id }}，OCR识别: {{ reviewItem?.parsedAmount || '-' }}
       </p>
       <el-form label-width="80px">
@@ -136,7 +172,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { getScreenshotList, getPendingReview, reviewScreenshot, reprocessScreenshot } from '../../api/screenshot'
+import { getScreenshotList, getPendingReview, reviewScreenshot, reprocessScreenshot, uploadScreenshot } from '../../api/screenshot'
 import { getAccountList } from '../../api/account'
 
 const loading = ref(false)
@@ -149,6 +185,10 @@ const pendingList = ref([])
 const reviewVisible = ref(false)
 const reviewItem = ref(null)
 const reviewAmount = ref(0)
+const uploadDialogVisible = ref(false)
+const uploading = ref(false)
+const uploadRef = ref(null)
+const uploadForm = ref({ accountId: null, fileList: [], rawFile: null })
 
 const query = ref({ pageNo: 1, pageSize: 10, accountId: null, ocrStatus: null })
 
@@ -226,6 +266,38 @@ async function handleReprocess(id) {
   } catch (e) { console.error(e) }
 }
 
+function handleFileChange(file) {
+  uploadForm.value.rawFile = file.raw
+}
+
+function handleFileRemove() {
+  uploadForm.value.rawFile = null
+}
+
+function resetUploadForm() {
+  uploadForm.value = { accountId: null, fileList: [], rawFile: null }
+}
+
+async function handleUpload() {
+  if (!uploadForm.value.accountId) {
+    ElMessage.warning('请选择账号')
+    return
+  }
+  if (!uploadForm.value.rawFile) {
+    ElMessage.warning('请选择截图文件')
+    return
+  }
+  uploading.value = true
+  try {
+    await uploadScreenshot(uploadForm.value.accountId, uploadForm.value.rawFile)
+    ElMessage.success('上传成功，OCR处理中')
+    uploadDialogVisible.value = false
+    loadData()
+  } finally {
+    uploading.value = false
+  }
+}
+
 onMounted(() => {
   loadData()
   loadAccounts()
@@ -238,12 +310,12 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .pending-info {
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
   line-height: 1.6;
 }
 </style>

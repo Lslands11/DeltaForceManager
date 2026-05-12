@@ -1,19 +1,19 @@
 <template>
   <router-view v-if="$route.path === '/login'" />
   <el-container v-else class="app-layout">
-    <el-aside :width="isCollapsed ? '64px' : '220px'" class="app-aside">
+    <el-aside :width="isCollapsed ? 'var(--sidebar-width-collapsed)' : 'var(--sidebar-width)'" class="app-aside">
       <div class="logo" @click="$router.push('/')">
+        <div class="logo-mark">DF</div>
         <span v-if="!isCollapsed" class="logo-text">DF Monitor</span>
-        <span v-else class="logo-icon">DF</span>
       </div>
       <el-menu
         :default-active="$route.path"
         :collapse="isCollapsed"
         router
         class="side-menu"
-        background-color="#1e1e2e"
-        text-color="#a6adc8"
-        active-text-color="#89b4fa"
+        :background-color="'var(--sidebar-bg)'"
+        :text-color="'var(--sidebar-text)'"
+        :active-text-color="'var(--sidebar-text-active)'"
       >
         <el-menu-item index="/dashboard">
           <el-icon><Monitor /></el-icon>
@@ -46,11 +46,12 @@
     </el-aside>
     <el-container>
       <el-header class="app-header">
-        <h3>{{ $route.meta.title }}</h3>
+        <h3 class="header-title">{{ $route.meta.title }}</h3>
         <div class="header-right">
-          <span class="username">{{ userInfo.nickname || userInfo.username }}</span>
-          <el-button link @click="handleLogout">
-            <el-icon><SwitchButton /></el-icon> 退出
+          <span class="header-user">{{ userInfo.nickname || userInfo.username }}</span>
+          <el-button link class="header-logout" @click="handleLogout">
+            <el-icon><SwitchButton /></el-icon>
+            <span v-if="!isCollapsed">退出</span>
           </el-button>
         </div>
       </el-header>
@@ -94,40 +95,51 @@ function handleLogout() {
   height: 100vh;
 }
 
+/* --- Sidebar --- */
 .app-aside {
-  background: #1e1e2e;
+  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
+  transition: width var(--transition-slow);
   overflow: hidden;
 }
 
 .logo {
-  height: 56px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-sm);
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #89b4fa;
-  letter-spacing: 0.05em;
-}
-
-.logo-icon {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #89b4fa;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--sidebar-text-active);
+  letter-spacing: 0.02em;
 }
 
 .side-menu {
   flex: 1;
   border-right: none;
   overflow-y: auto;
+  padding: var(--space-sm) 0;
 }
 
 .side-menu::-webkit-scrollbar {
@@ -135,13 +147,19 @@ function handleLogout() {
 }
 
 .side-menu .el-menu-item {
-  border-radius: 8px;
-  margin: 4px 8px;
-  height: 44px;
+  border-radius: var(--radius-md);
+  margin: 2px var(--space-sm);
+  height: 42px;
+}
+
+.side-menu .el-menu-item:hover {
+  background-color: var(--sidebar-bg-hover) !important;
+  color: var(--sidebar-text-hover) !important;
 }
 
 .side-menu .el-menu-item.is-active {
-  background: rgba(137, 180, 250, 0.12) !important;
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: var(--sidebar-text-active) !important;
 }
 
 .collapse-btn {
@@ -150,43 +168,58 @@ function handleLogout() {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #6c7086;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--sidebar-border);
+  transition: color var(--transition-fast);
 }
 
 .collapse-btn:hover {
-  color: #cdd6f4;
+  color: var(--sidebar-text-hover);
 }
 
+/* --- Header --- */
 .app-header {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  height: 56px;
+  padding: 0 var(--space-lg);
+  height: var(--header-height);
+  backdrop-filter: blur(8px);
 }
 
-.app-header h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
+.header-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-md);
 }
 
-.username {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+.header-user {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
+.header-logout {
+  color: var(--color-text-muted) !important;
+  transition: color var(--transition-fast) !important;
+}
+
+.header-logout:hover {
+  color: var(--color-danger) !important;
+}
+
+/* --- Main --- */
 .app-main {
-  background: var(--bg-primary);
-  padding: 24px;
+  background: var(--color-bg);
+  padding: var(--space-lg);
   overflow-y: auto;
 }
 </style>

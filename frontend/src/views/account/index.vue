@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="page-header page-header-row">
       <div>
         <h2>账号管理</h2>
         <p>管理游戏账号和设备绑定</p>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="card" style="margin-bottom: 16px;">
+    <div class="filter-bar">
       <el-form inline>
         <el-form-item label="账号名称">
           <el-input v-model="query.accountName" placeholder="搜索账号" clearable style="width: 200px;" @clear="loadData" @keyup.enter="loadData" />
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Table -->
-    <div class="card">
+    <div class="table-container">
       <el-table :data="tableData" v-loading="loading" stripe>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="accountName" label="账号名称" min-width="120" />
@@ -57,7 +57,7 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+      <div class="table-pagination">
         <el-pagination
           v-model:current-page="query.pageNo"
           v-model:page-size="query.pageSize"

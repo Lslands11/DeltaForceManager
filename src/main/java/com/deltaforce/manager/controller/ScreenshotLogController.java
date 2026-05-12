@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import com.deltaforce.manager.constant.GameMonitorConstants;
 import com.deltaforce.manager.dto.Result;
+import com.deltaforce.manager.dto.ScreenshotUploadResponse;
 import com.deltaforce.manager.entity.GameBalanceRecord;
 import com.deltaforce.manager.entity.GameScreenshotLog;
 import com.deltaforce.manager.service.IGameAccountService;
@@ -13,12 +14,17 @@ import com.deltaforce.manager.service.IGameBalanceRecordService;
 import com.deltaforce.manager.service.IGameScreenshotLogService;
 import com.deltaforce.manager.service.IOcrProcessService;
 import com.deltaforce.manager.util.SecurityUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/screenshot")
@@ -33,6 +39,66 @@ public class ScreenshotLogController {
     private IGameBalanceRecordService balanceRecordService;
     @Resource
     private IGameAccountService gameAccountService;
+
+    @Value("${game-monitor.upload.path:uploads/screenshots}")
+    private String uploadPath;
+
+    @PostMapping("/upload")
+    public Result<ScreenshotUploadResponse> uploadScreenshot(
+            @RequestParam("accountId") Long accountId,
+            @RequestParam("screenshot") MultipartFile screenshot) {
+
+        if (screenshot.isEmpty()) {
+            return Result.error("截图文件为空");
+        }
+
+        // 非管理员只能上传自己名下账号的截图
+        if (!SecurityUtil.isAdmin()) {
+            Long userId = SecurityUtil.getCurrentUserId();
+            List<Long> accountIds = gameAccountService.getAccountIdsByUserId(userId);
+            if (!accountIds.contains(accountId)) {
+                return Result.error("无权上传该账号的截图");
+            }
+        }
+
+        try {
+            String fileName = UUID.randomUUID().toString().replace("-", "")
+                    + getExtension(screenshot.getOriginalFilename());
+
+            File dir = new File(uploadPath, String.valueOf(accountId));
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File destFile = new File(dir, fileName);
+            screenshot.transferTo(destFile);
+
+            GameScreenshotLog screenshotLog = new GameScreenshotLog();
+            screenshotLog.setAccountId(accountId);
+            screenshotLog.setOriginalUrl(destFile.getAbsolutePath());
+            screenshotLog.setUploadTime(new Date());
+            screenshotLog.setOcrStatus(0);
+            screenshotLog.setCreateTime(new Date());
+            screenshotLogService.save(screenshotLog);
+
+            ocrProcessService.processScreenshot(screenshotLog.getId());
+
+            ScreenshotUploadResponse response = new ScreenshotUploadResponse();
+            response.setScreenshotId(String.valueOf(screenshotLog.getId()));
+            response.setMessage("上传成功，OCR处理中");
+            return Result.OK(response);
+
+        } catch (IOException e) {
+            log.error("截图上传失败", e);
+            return Result.error("截图上传失败: " + e.getMessage());
+        }
+    }
+
+    private String getExtension(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return ".png";
+        }
+        return filename.substring(filename.lastIndexOf("."));
+    }
 
     @GetMapping("/list")
     public Result<IPage<GameScreenshotLog>> queryPageList(

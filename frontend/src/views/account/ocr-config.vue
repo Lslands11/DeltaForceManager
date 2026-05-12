@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <el-button link @click="$router.back()" style="margin-bottom: 8px;">
+      <el-button link @click="$router.back()" style="margin-bottom: 8px; color: var(--color-text-secondary);">
         <el-icon><ArrowLeft /></el-icon> 返回
       </el-button>
       <h2>OCR 配置</h2>
@@ -11,7 +11,7 @@
     <div class="card" style="max-width: 640px;">
       <el-form :model="form" label-width="120px" v-loading="loading">
         <el-divider content-position="left">裁剪区域</el-divider>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-md);">
           <el-form-item label="裁剪X坐标">
             <el-input-number v-model="form.cropX" :min="0" style="width: 100%;" />
           </el-form-item>

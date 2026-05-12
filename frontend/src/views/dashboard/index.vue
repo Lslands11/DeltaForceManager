@@ -6,7 +6,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid-4" style="margin-bottom: 24px;">
+    <div class="grid-4 section-gap">
       <div class="card stat-card">
         <span class="label">总余额</span>
         <span class="value">{{ formatMoney(summary.totalBalance) }}</span>
@@ -28,11 +28,11 @@
     </div>
 
     <!-- Account Cards -->
-    <div class="grid-3">
+    <div class="grid-3 section-gap">
       <div
         v-for="account in summary.accounts"
         :key="account.accountId"
-        class="card account-card"
+        class="card card-interactive account-card"
       >
         <div class="account-header">
           <div>
@@ -56,9 +56,9 @@
     </div>
 
     <!-- Trend Chart -->
-    <div class="card" style="margin-top: 24px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 1rem; font-weight: 600;">余额走势 (近7天)</h3>
+    <div class="card">
+      <div class="chart-header">
+        <h3 class="chart-title">余额走势 (近7天)</h3>
         <el-select v-model="trendAccountId" placeholder="全部账号" clearable size="small" style="width: 160px;" @change="loadTrend">
           <el-option
             v-for="a in accountOptions"
@@ -188,50 +188,61 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .account-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.account-card:hover {
-  transform: translateY(-2px);
+  padding: var(--space-lg);
 }
 
 .account-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-md);
 }
 
 .account-name {
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
 }
 
 .account-device {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
   margin-top: 2px;
 }
 
 .account-balance {
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-xs);
+  color: var(--color-text);
 }
 
 .account-change {
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-sm);
 }
 
-.account-change.positive { color: var(--success); }
-.account-change.negative { color: var(--danger); }
-.value.positive { color: var(--success); }
-.value.negative { color: var(--danger); }
+.account-change.positive { color: var(--color-success); }
+.account-change.negative { color: var(--color-danger); }
+.value.positive { color: var(--color-success); }
+.value.negative { color: var(--color-danger); }
 
 .account-update {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.chart-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
 }
 </style>

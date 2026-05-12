@@ -8,7 +8,7 @@
     <el-tabs v-model="activeTab" @tab-change="handleTabChange">
       <!-- Daily Trend -->
       <el-tab-pane label="每日趋势" name="daily">
-        <div class="card" style="margin-bottom: 16px;">
+        <div class="filter-bar section-gap">
           <el-form inline>
             <el-form-item label="账号">
               <el-select v-model="dailyQuery.accountId" placeholder="全部账号" clearable style="width: 200px;">
@@ -31,11 +31,11 @@
           </el-form>
         </div>
 
-        <div class="card" style="margin-bottom: 16px;">
+        <div class="card section-gap">
           <div ref="dailyChartRef" style="height: 350px;"></div>
         </div>
 
-        <div class="card">
+        <div class="table-container">
           <el-table :data="dailyData" stripe>
             <el-table-column prop="date" label="日期" width="120" />
             <el-table-column prop="accountName" label="账号" min-width="120" />
@@ -59,7 +59,7 @@
 
       <!-- Profit Summary -->
       <el-tab-pane label="利润报表" name="profit">
-        <div class="card" style="margin-bottom: 16px;">
+        <div class="filter-bar section-gap">
           <el-form inline>
             <el-form-item label="周期">
               <el-radio-group v-model="profitQuery.period" @change="loadProfit">
@@ -75,7 +75,7 @@
           </el-form>
         </div>
 
-        <div class="grid-4" style="margin-bottom: 16px;">
+        <div class="grid-4 section-gap">
           <div class="card stat-card">
             <span class="label">{{ profitData.periodLabel || '-' }}</span>
             <span class="label">总利润</span>
@@ -86,7 +86,7 @@
         </div>
 
         <div class="card">
-          <div ref="profitChartRef" style="height: 300px; margin-bottom: 16px;"></div>
+          <div ref="profitChartRef" style="height: 300px; margin-bottom: var(--space-md);"></div>
           <el-table :data="profitData.accounts || []" stripe>
             <el-table-column prop="accountName" label="账号" min-width="120" />
             <el-table-column label="期初余额" min-width="120">
@@ -109,7 +109,7 @@
 
       <!-- Account Trend -->
       <el-tab-pane label="账号走势" name="trend">
-        <div class="card" style="margin-bottom: 16px;">
+        <div class="filter-bar section-gap">
           <el-form inline>
             <el-form-item label="账号" required>
               <el-select v-model="trendQuery.accountId" placeholder="选择账号" style="width: 200px;">
@@ -321,10 +321,3 @@ onBeforeUnmount(() => {
   trendChart?.dispose()
 })
 </script>
-
-<style scoped>
-.text-success { color: var(--success); font-weight: 600; }
-.text-danger { color: var(--danger); font-weight: 600; }
-.value.positive { color: var(--success); }
-.value.negative { color: var(--danger); }
-</style>
