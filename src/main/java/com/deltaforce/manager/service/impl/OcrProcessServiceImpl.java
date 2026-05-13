@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -30,6 +30,8 @@ public class OcrProcessServiceImpl implements IOcrProcessService {
     private IGameBalanceRecordService balanceRecordService;
     @Resource
     private OcrPipeline ocrPipeline;
+    @Resource
+    private FileStorageService fileStorageService;
 
     @Async("gameMonitorExecutor")
     @Override
@@ -58,8 +60,8 @@ public class OcrProcessServiceImpl implements IOcrProcessService {
         }
 
         long startTime = System.currentTimeMillis();
-        try {
-            BufferedImage image = ImageIO.read(new File(screenshotLog.getOriginalUrl()));
+        try (InputStream is = fileStorageService.download(screenshotLog.getOriginalUrl())) {
+            BufferedImage image = ImageIO.read(is);
             if (image == null) {
                 throw new RuntimeException("无法解析图片: " + screenshotLog.getOriginalUrl());
             }

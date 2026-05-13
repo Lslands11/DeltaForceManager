@@ -5,18 +5,16 @@ import com.deltaforce.manager.dto.Result;
 import com.deltaforce.manager.dto.ScreenshotUploadResponse;
 import com.deltaforce.manager.entity.GameAccount;
 import com.deltaforce.manager.entity.GameScreenshotLog;
+import com.deltaforce.manager.service.FileStorageService;
 import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameScreenshotLogService;
 import com.deltaforce.manager.service.IOcrProcessService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/device")
@@ -29,9 +27,8 @@ public class ScreenshotUploadController {
     private IGameScreenshotLogService screenshotLogService;
     @Resource
     private IOcrProcessService ocrProcessService;
-
-    @Value("${game-monitor.upload.path:uploads/screenshots}")
-    private String uploadPath;
+    @Resource
+    private FileStorageService fileStorageService;
 
     @PostMapping("/upload")
     public Result<ScreenshotUploadResponse> uploadScreenshot(
@@ -48,19 +45,16 @@ public class ScreenshotUploadController {
         }
 
         try {
-            String fileName = UUID.randomUUID().toString().replace("-", "")
-                    + getExtension(screenshot.getOriginalFilename());
-
-            File dir = new File(uploadPath, String.valueOf(account.getId()));
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            File destFile = new File(dir, fileName);
-            screenshot.transferTo(destFile);
+            String objectPath = fileStorageService.upload(
+                    account.getId(),
+                    screenshot.getOriginalFilename(),
+                    screenshot.getInputStream(),
+                    screenshot.getSize(),
+                    screenshot.getContentType());
 
             GameScreenshotLog screenshotLog = new GameScreenshotLog();
             screenshotLog.setAccountId(account.getId());
-            screenshotLog.setOriginalUrl(destFile.getAbsolutePath());
+            screenshotLog.setOriginalUrl(objectPath);
             screenshotLog.setUploadTime(new Date());
             screenshotLog.setOcrStatus(0);
             screenshotLog.setCreateTime(new Date());
@@ -86,12 +80,5 @@ public class ScreenshotUploadController {
             return Result.error("无效的device_token");
         }
         return Result.OK("ok");
-    }
-
-    private String getExtension(String filename) {
-        if (filename == null || !filename.contains(".")) {
-            return ".png";
-        }
-        return filename.substring(filename.lastIndexOf("."));
     }
 }

@@ -9,22 +9,20 @@ import com.deltaforce.manager.dto.Result;
 import com.deltaforce.manager.dto.ScreenshotUploadResponse;
 import com.deltaforce.manager.entity.GameBalanceRecord;
 import com.deltaforce.manager.entity.GameScreenshotLog;
+import com.deltaforce.manager.service.FileStorageService;
 import com.deltaforce.manager.service.IGameAccountService;
 import com.deltaforce.manager.service.IGameBalanceRecordService;
 import com.deltaforce.manager.service.IGameScreenshotLogService;
 import com.deltaforce.manager.service.IOcrProcessService;
 import com.deltaforce.manager.util.SecurityUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/screenshot")
@@ -39,9 +37,8 @@ public class ScreenshotLogController {
     private IGameBalanceRecordService balanceRecordService;
     @Resource
     private IGameAccountService gameAccountService;
-
-    @Value("${game-monitor.upload.path:uploads/screenshots}")
-    private String uploadPath;
+    @Resource
+    private FileStorageService fileStorageService;
 
     @PostMapping("/upload")
     public Result<ScreenshotUploadResponse> uploadScreenshot(
@@ -62,19 +59,16 @@ public class ScreenshotLogController {
         }
 
         try {
-            String fileName = UUID.randomUUID().toString().replace("-", "")
-                    + getExtension(screenshot.getOriginalFilename());
-
-            File dir = new File(uploadPath, String.valueOf(accountId));
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            File destFile = new File(dir, fileName);
-            screenshot.transferTo(destFile);
+            String objectPath = fileStorageService.upload(
+                    accountId,
+                    screenshot.getOriginalFilename(),
+                    screenshot.getInputStream(),
+                    screenshot.getSize(),
+                    screenshot.getContentType());
 
             GameScreenshotLog screenshotLog = new GameScreenshotLog();
             screenshotLog.setAccountId(accountId);
-            screenshotLog.setOriginalUrl(destFile.getAbsolutePath());
+            screenshotLog.setOriginalUrl(objectPath);
             screenshotLog.setUploadTime(new Date());
             screenshotLog.setOcrStatus(0);
             screenshotLog.setCreateTime(new Date());
@@ -91,13 +85,6 @@ public class ScreenshotLogController {
             log.error("截图上传失败", e);
             return Result.error("截图上传失败: " + e.getMessage());
         }
-    }
-
-    private String getExtension(String filename) {
-        if (filename == null || !filename.contains(".")) {
-            return ".png";
-        }
-        return filename.substring(filename.lastIndexOf("."));
     }
 
     @GetMapping("/list")

@@ -21,8 +21,11 @@ game-monitor:
   tesseract:
     datapath: /usr/share/tessdata
     language: eng
-  upload:
-    path: /app/uploads/screenshots
+  minio:
+    endpoint: http://minio:9000
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    bucket-name: deltaforce
 
 jwt:
   secret: ${JWT_SECRET:DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction}

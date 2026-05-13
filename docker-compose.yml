@@ -1,5 +1,24 @@
 services:
   # =============================================
+  # MinIO 对象存储
+  # =============================================
+  minio:
+    image: minio/minio:latest
+    container_name: deltaforce-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    command: server /data --console-address ":9001"
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - deltaforce-net
+
+  # =============================================
   # 后端 (Spring Boot + Tesseract OCR)
   # =============================================
   backend:
@@ -12,10 +31,12 @@ services:
       DB_USERNAME: ${DB_USERNAME:-root}
       DB_PASSWORD: ${DB_PASSWORD:-kskblzdjdwkzkbl}
       JWT_SECRET: ${JWT_SECRET:-DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
     ports:
       - "8080:8080"
-    volumes:
-      - upload_data:/app/uploads/screenshots
+    depends_on:
+      - minio
     networks:
       - deltaforce-net
 
@@ -36,7 +57,7 @@ services:
       - deltaforce-net
 
 volumes:
-  upload_data:
+  minio_data:
     driver: local
 
 networks:

@@ -20,10 +20,13 @@ mybatis-plus:
 
 game-monitor:
   tesseract:
-    datapath: D:/tessdata
+    datapath: tessdata
     language: eng
-  upload:
-    path: D:/uploads/screenshots
+  minio:
+    endpoint: http://localhost:9000
+    access-key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret-key: ${MINIO_SECRET_KEY:minioadmin}
+    bucket-name: deltaforce
 
 jwt:
   secret: DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction
