@@ -1,4 +1,4 @@
-# 云服务器部署完整指南
+# 云服务器部署完整指南（CentOS）
 
 ## 架构说明
 
@@ -15,7 +15,7 @@
   宿主机 Nginx        Docker 容器
 ```
 
-> 部署方式：宿主机 Nginx（已装）做反向代理 + Docker 运行后端。
+> 部署方式：宿主机 Nginx 做反向代理 + Docker 运行后端。
 
 ---
 
@@ -31,9 +31,9 @@ ssh root@你的服务器IP
 
 ```bash
 # 更新系统
-apt update && apt upgrade -y
+yum update -y
 
-# 安装 Docker
+# 安装 Docker（官方脚本自动识别 CentOS）
 curl -fsSL https://get.docker.com | sh
 
 # 启动 Docker 并设为开机自启
@@ -46,12 +46,24 @@ docker --version
 
 ---
 
-## 第 3 步：上传项目代码
+## 第 3 步：安装 Nginx（如未安装）
+
+```bash
+yum install -y nginx
+systemctl start nginx
+systemctl enable nginx
+```
+
+---
+
+## 第 4 步：上传项目代码
 
 方式 A：**Git 克隆**（推荐）
 
 ```bash
-# 如果已有 git 仓库
+# CentOS 可能需要先安装 git
+yum install -y git
+
 cd /opt
 git clone https://github.com/你的用户名/DeltaForceManager.git
 cd DeltaForceManager
@@ -67,7 +79,7 @@ Compress-Archive -Path "e:\learning\DeltaForceManager\*" `
   -DestinationPath "e:\DeltaForceManager.zip" `
   -CompressionLevel Optimal
 
-# 上传到服务器（在 PowerShell 中执行）
+# 上传到服务器
 scp e:\DeltaForceManager.zip root@你的服务器IP:/opt/
 ```
 
@@ -75,14 +87,14 @@ scp e:\DeltaForceManager.zip root@你的服务器IP:/opt/
 
 ```bash
 cd /opt
-apt install -y unzip
+yum install -y unzip
 unzip DeltaForceManager.zip -d DeltaForceManager
 cd DeltaForceManager
 ```
 
 ---
 
-## 第 4 步：创建配置文件
+## 第 5 步：创建配置文件
 
 ```bash
 # 复制环境变量模板
@@ -106,11 +118,9 @@ JWT_SECRET=请替换为随机字符串
 FRONTEND_PORT=8088
 ```
 
-> **说明**：`FRONTEND_PORT` 设为 8088 是因为宿主机已有 Nginx 占用 80 端口。Docker 容器监听 8088，由宿主机 Nginx 转发请求。
-
 ---
 
-## 第 5 步：构建并启动 Docker 容器
+## 第 6 步：构建并启动 Docker 容器
 
 ```bash
 cd /opt/DeltaForceManager
@@ -131,19 +141,12 @@ docker compose logs -f backend
 
 看到 `Started Application` 和 `已创建默认管理员账号` 即表示启动成功。
 
-如果构建失败，查看详细日志：
-
-```bash
-docker compose logs backend
-docker compose logs frontend
-```
-
 ---
 
-## 第 6 步：配置宿主机 Nginx 反向代理
+## 第 7 步：配置 Nginx 反向代理
 
 ```bash
-# 创建 Nginx 配置文件
+# 创建配置文件
 vim /etc/nginx/conf.d/deltaforce.conf
 ```
 
@@ -152,11 +155,10 @@ vim /etc/nginx/conf.d/deltaforce.conf
 ```nginx
 server {
     listen 80;
-    server_name 你的域名;   # 如果没有域名，写服务器IP或删掉此行
+    server_name 你的域名;   # 没有域名就删掉此行
 
     client_max_body_size 20M;
 
-    # 前端静态资源
     location / {
         proxy_pass http://127.0.0.1:8088;
         proxy_set_header Host $host;
@@ -165,7 +167,6 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # API 请求转发到后端
     location /api/ {
         proxy_pass http://127.0.0.1:8088;
         proxy_set_header Host $host;
@@ -188,7 +189,29 @@ nginx -s reload
 
 ---
 
-## 第 7 步：验证部署
+## 第 8 步：配置防火墙
+
+CentOS 默认有防火墙，需要放通端口：
+
+```bash
+# 放通 HTTP
+firewall-cmd --permanent --add-service=http
+
+# 如果需要 HTTPS
+firewall-cmd --permanent --add-service=https
+
+# 重载防火墙
+firewall-cmd --reload
+
+# 查看已开放的端口
+firewall-cmd --list-all
+```
+
+同时确保云服务器的 **安全组** 也放通了 80（HTTP）和 443（HTTPS）端口。
+
+---
+
+## 第 9 步：验证部署
 
 在浏览器中访问 `http://你的服务器IP`，你应该能看到登录页面。
 
@@ -198,7 +221,7 @@ nginx -s reload
 也可以通过命令验证：
 
 ```bash
-# 测试前端（Nginx → Docker）
+# 测试前端
 curl -I http://127.0.0.1:8088
 
 # 测试后端 API
@@ -207,18 +230,17 @@ curl http://127.0.0.1:8088/api/auth/ping
 
 ---
 
-## 第 8 步：配置 HTTPS（可选但强烈推荐）
-
-使用 Certbot 免费申请 SSL 证书：
+## 第 10 步：配置 HTTPS（可选但推荐）
 
 ```bash
 # 安装 certbot
-apt install -y certbot python3-certbot-nginx
+yum install -y epel-release
+yum install -y certbot python3-certbot-nginx
 
 # 申请证书（需先有域名并解析到服务器IP）
 certbot --nginx -d 你的域名
 
-# 证书自动续期（certbot 会自动添加 cron）
+# 证书自动续期测试
 certbot renew --dry-run
 ```
 
@@ -254,20 +276,6 @@ docker system prune -f
 
 ---
 
-## 开放安全组 / 防火墙
-
-确保云服务器的安全组规则放通以下端口：
-
-| 端口 | 用途 |
-|------|------|
-| 80   | HTTP 访问 |
-| 443  | HTTPS 访问（如配置了 SSL） |
-| 22   | SSH 远程连接 |
-
-> 不需要暴露 8080（后端）或 3306（数据库），它们只在服务器内部或云内网通信。
-
----
-
 ## 故障排查
 
 | 问题 | 排查命令 |
@@ -275,5 +283,6 @@ docker system prune -f
 | 构建失败 | `docker compose logs` 查看报错 |
 | 后端无法连接数据库 | `docker compose exec backend curl 47.110.91.251:3306` 或检查数据库安全组 |
 | 前端白屏 | `docker compose exec frontend cat /var/log/nginx/error.log` |
-| 端口冲突 | `netstat -tlnp \| grep :8088` |
+| 端口冲突 | `ss -tlnp \| grep :8088` |
 | OCR 不工作 | `docker compose exec backend tesseract --version` |
+| 防火墙拦截 | `firewall-cmd --list-all` |
