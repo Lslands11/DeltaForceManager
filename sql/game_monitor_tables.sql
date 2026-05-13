@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `game_ocr_config` (
   `invert_colors`   tinyint      NOT NULL DEFAULT 0    COMMENT '是否反转颜色: 1=是 0=否',
   `scale_factor`    decimal(3,1) NOT NULL DEFAULT 2.0  COMMENT '放大倍数',
   `tesseract_psm`   int          NOT NULL DEFAULT 7    COMMENT 'Tesseract PSM模式(7=单行文本)',
-  `unit_suffix`     varchar(16)  DEFAULT '万'          COMMENT '金额单位后缀(万/K/M等)',
+  `unit_suffix`     varchar(16)  DEFAULT NULL          COMMENT '金额单位后缀(万/K/M等, NULL=自动识别)',
   `create_time`     datetime     DEFAULT NULL           COMMENT '创建时间',
   `update_time`     datetime     DEFAULT NULL           COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -75,3 +75,6 @@ CREATE TABLE IF NOT EXISTS `game_balance_record` (
   KEY `idx_account_time` (`account_id`, `record_time`),
   KEY `idx_record_time` (`record_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='余额记录';
+
+-- 升级：unit_suffix 改为默认 NULL（自动识别）
+-- ALTER TABLE `game_ocr_config` MODIFY COLUMN `unit_suffix` varchar(16) DEFAULT NULL COMMENT '金额单位后缀(万/K/M等, NULL=自动识别)';

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class BalanceTextParser {
 
     private static final Map<String, BigDecimal> UNIT_MULTIPLIERS = new HashMap<>();
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("([\\d,]+\\.?\\d*)\\s*([万WwKkMmBb]?)");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("([\\d,]+(?:\\.\\d+)?)\\s*([万WwKkMmBb]?)");
 
     static {
         UNIT_MULTIPLIERS.put("万", new BigDecimal("10000"));
@@ -94,13 +94,16 @@ public class BalanceTextParser {
             confidence += 15;
         }
 
-        if (expectedUnit != null && !expectedUnit.isEmpty() && detectedUnit != null && !detectedUnit.isEmpty()) {
-            if (UNIT_MULTIPLIERS.containsKey(detectedUnit)
+        // 单位匹配加分（仅在配置了预期单位时才校验）
+        if (expectedUnit != null && !expectedUnit.isEmpty()) {
+            if (detectedUnit != null && !detectedUnit.isEmpty()
+                    && UNIT_MULTIPLIERS.containsKey(detectedUnit)
                     && UNIT_MULTIPLIERS.containsKey(expectedUnit)
                     && UNIT_MULTIPLIERS.get(detectedUnit).equals(UNIT_MULTIPLIERS.get(expectedUnit))) {
                 confidence += 15;
             }
-        } else if ((expectedUnit == null || expectedUnit.isEmpty()) && (detectedUnit == null || detectedUnit.isEmpty())) {
+        } else {
+            // 未配置预期单位时，识别到数字就加分
             confidence += 10;
         }
 

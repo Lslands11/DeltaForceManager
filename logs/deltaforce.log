@@ -596,3 +596,210 @@ This generated password is for development use only. Your security configuration
 2026-05-13 14:12:13.318 DEBUG [d459a4afafee] [nio-8080-exec-9] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054437452602015745(Long), 2054439784865726466(Long), 2054439827807010817(Long), 2054443847372046337(Long)
 2026-05-13 14:12:13.350 DEBUG [d459a4afafee] [nio-8080-exec-9] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
 2026-05-13 14:12:13.352 INFO  [d459a4afafee] [nio-8080-exec-9] c.d.m.config.RequestLogInterceptor       : <<< GET /api/screenshot/list | 200 | 71ms
+2026-05-13 14:14:35.269 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,original_url,cropped_url,upload_time,ocr_status,ocr_raw_text,ocr_confidence,parsed_amount,manual_amount,error_message,ocr_process_time,create_time FROM game_screenshot_log WHERE (ocr_status = ?) ORDER BY create_time ASC LIMIT 20
+2026-05-13 14:14:35.269 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : ==> Parameters: 0(Integer)
+2026-05-13 14:14:35.305 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:19:35.346 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,original_url,cropped_url,upload_time,ocr_status,ocr_raw_text,ocr_confidence,parsed_amount,manual_amount,error_message,ocr_process_time,create_time FROM game_screenshot_log WHERE (ocr_status = ?) ORDER BY create_time ASC LIMIT 20
+2026-05-13 14:19:35.347 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : ==> Parameters: 0(Integer)
+2026-05-13 14:19:35.382 DEBUG [] [   scheduling-1] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:20.926 INFO  [2069aca4b87c] [nio-8080-exec-6] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=100 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:21.032 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:21.032 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:21.090 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:21.091 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:21.091 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 100(Long)
+2026-05-13 14:20:21.153 DEBUG [2069aca4b87c] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:21.159 INFO  [2069aca4b87c] [nio-8080-exec-6] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 233ms
+2026-05-13 14:20:21.200 INFO  [3c168f70a240] [nio-8080-exec-7] c.d.m.config.RequestLogInterceptor       : >>> GET /api/report/dailyTrend?startDate=2026-05-06&endDate=2026-05-13 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:21.294 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:21.297 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:21.358 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:21.360 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:21.361 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054437452602015745(Long)
+2026-05-13 14:20:21.403 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:21.403 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:21.403 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:21.437 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:21.440 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:21.440 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439784865726466(Long)
+2026-05-13 14:20:21.489 INFO  [9e17df173ba6] [nio-8080-exec-1] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=10&accountName= | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:21.491 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:21.492 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:21.492 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:21.509 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:21.509 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:21.793 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:21.793 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:21.793 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:21.793 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 10(Long)
+2026-05-13 14:20:21.797 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:21.797 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439827807010817(Long)
+2026-05-13 14:20:21.935 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:21.935 DEBUG [9e17df173ba6] [nio-8080-exec-1] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:21.935 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:21.935 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:21.936 INFO  [9e17df173ba6] [nio-8080-exec-1] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 447ms
+2026-05-13 14:20:21.964 INFO  [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=10&accountName= | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:21.987 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:21.987 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:22.208 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:22.208 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:22.210 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:22.211 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 10(Long)
+2026-05-13 14:20:22.211 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:22.211 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054443847372046337(Long)
+2026-05-13 14:20:22.261 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:22.265 DEBUG [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:22.265 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:22.265 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:22.265 INFO  [f84f9f3c12aa] [nio-8080-exec-2] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 301ms
+2026-05-13 14:20:22.394 DEBUG [3c168f70a240] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:22.395 INFO  [3c168f70a240] [nio-8080-exec-7] c.d.m.config.RequestLogInterceptor       : <<< GET /api/report/dailyTrend | 200 | 1195ms
+2026-05-13 14:20:24.305 INFO  [c4bf766563ed] [nio-8080-exec-3] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/ocrConfig?accountId=2054443847372046337 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:24.344 DEBUG [c4bf766563ed] [nio-8080-exec-3] c.d.m.m.GameOcrConfigMapper.selectList   : ==>  Preparing: SELECT id,account_id,crop_x,crop_y,crop_width,crop_height,threshold_value,invert_colors,scale_factor,tesseract_psm,unit_suffix,create_time,update_time FROM game_ocr_config WHERE (account_id = ?) LIMIT 1
+2026-05-13 14:20:24.345 DEBUG [c4bf766563ed] [nio-8080-exec-3] c.d.m.m.GameOcrConfigMapper.selectList   : ==> Parameters: 2054443847372046337(Long)
+2026-05-13 14:20:24.379 DEBUG [c4bf766563ed] [nio-8080-exec-3] c.d.m.m.GameOcrConfigMapper.selectList   : <==      Total: 0
+2026-05-13 14:20:24.386 INFO  [c4bf766563ed] [nio-8080-exec-3] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/ocrConfig | 200 | 81ms
+2026-05-13 14:20:31.018 INFO  [75b1a25684ac] [nio-8080-exec-5] c.d.m.config.RequestLogInterceptor       : >>> POST /api/account/saveOcrConfig | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:31.128 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.m.GameOcrConfigMapper.selectList   : ==>  Preparing: SELECT id,account_id,crop_x,crop_y,crop_width,crop_height,threshold_value,invert_colors,scale_factor,tesseract_psm,unit_suffix,create_time,update_time FROM game_ocr_config WHERE (account_id = ?) LIMIT 1
+2026-05-13 14:20:31.128 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.m.GameOcrConfigMapper.selectList   : ==> Parameters: 2054443847372046337(Long)
+2026-05-13 14:20:31.178 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.m.GameOcrConfigMapper.selectList   : <==      Total: 0
+2026-05-13 14:20:31.194 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.mapper.GameOcrConfigMapper.insert  : ==>  Preparing: INSERT INTO game_ocr_config ( id,account_id, crop_x, crop_y, crop_width, crop_height, threshold_value, invert_colors, scale_factor, tesseract_psm, unit_suffix,create_time, update_time ) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ? )
+2026-05-13 14:20:31.203 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.mapper.GameOcrConfigMapper.insert  : ==> Parameters: 2054446672634363905(Long), 2054443847372046337(Long), 0(Integer), 0(Integer), 200(Integer), 60(Integer), 128(Integer), 0(Integer), 2(BigDecimal), 7(Integer), (String), 2026-05-13 14:20:31.19(Timestamp), 2026-05-13 14:20:31.194(Timestamp)
+2026-05-13 14:20:31.423 DEBUG [75b1a25684ac] [nio-8080-exec-5] c.d.m.mapper.GameOcrConfigMapper.insert  : <==    Updates: 1
+2026-05-13 14:20:31.424 INFO  [75b1a25684ac] [nio-8080-exec-5] c.d.m.config.RequestLogInterceptor       : <<< POST /api/account/saveOcrConfig | 200 | 406ms
+2026-05-13 14:20:33.656 INFO  [40e8838dc2c9] [nio-8080-exec-8] c.d.m.config.RequestLogInterceptor       : >>> GET /api/report/multiAccountSummary | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:33.657 INFO  [c5391a6b6231] [io-8080-exec-10] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=100 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:33.745 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:33.745 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:33.749 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:33.749 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:34.065 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:34.065 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:34.065 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:34.065 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 100(Long)
+2026-05-13 14:20:34.065 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (status = ? AND id IN (?,?,?,?))
+2026-05-13 14:20:34.065 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 1(Integer), 2054437452602015745(Long), 2054439784865726466(Long), 2054439827807010817(Long), 2054443847372046337(Long)
+2026-05-13 14:20:34.202 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:34.202 DEBUG [c5391a6b6231] [io-8080-exec-10] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:34.205 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:34.205 INFO  [c5391a6b6231] [io-8080-exec-10] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 548ms
+2026-05-13 14:20:34.205 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==> Parameters: 2054437452602015745(Long)
+2026-05-13 14:20:34.365 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:34.365 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:34.365 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==> Parameters: 2054439784865726466(Long)
+2026-05-13 14:20:34.576 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:34.581 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:34.581 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==> Parameters: 2054439827807010817(Long)
+2026-05-13 14:20:34.692 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:34.695 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:34.695 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : ==> Parameters: 2054443847372046337(Long)
+2026-05-13 14:20:34.772 DEBUG [40e8838dc2c9] [nio-8080-exec-8] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:34.775 INFO  [40e8838dc2c9] [nio-8080-exec-8] c.d.m.config.RequestLogInterceptor       : <<< GET /api/report/multiAccountSummary | 200 | 1119ms
+2026-05-13 14:20:34.802 INFO  [b91a87e5a249] [nio-8080-exec-4] c.d.m.config.RequestLogInterceptor       : >>> GET /api/report/dailyTrend?startDate=2026-05-06&endDate=2026-05-13 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:34.982 INFO  [563c979f6b61] [nio-8080-exec-9] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=10&accountName= | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:34.990 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:34.990 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:35.089 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.089 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:35.090 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:35.090 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:35.090 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054437452602015745(Long)
+2026-05-13 14:20:35.201 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:35.201 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:35.201 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:35.201 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:35.202 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:35.202 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 10(Long)
+2026-05-13 14:20:35.310 DEBUG [563c979f6b61] [nio-8080-exec-9] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.310 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.310 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:35.310 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439784865726466(Long)
+2026-05-13 14:20:35.315 INFO  [563c979f6b61] [nio-8080-exec-9] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 333ms
+2026-05-13 14:20:35.348 INFO  [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=10&accountName= | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:35.439 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:35.439 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:35.439 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:35.456 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:35.456 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:35.595 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:35.595 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.595 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:35.595 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 10(Long)
+2026-05-13 14:20:35.595 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:35.595 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439827807010817(Long)
+2026-05-13 14:20:35.695 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:35.695 DEBUG [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.695 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:35.695 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:35.695 INFO  [3445a7bc4cd2] [nio-8080-exec-6] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 347ms
+2026-05-13 14:20:35.744 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.748 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:35.748 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054443847372046337(Long)
+2026-05-13 14:20:35.785 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:35.787 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:35.788 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:35.822 DEBUG [b91a87e5a249] [nio-8080-exec-4] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:35.824 INFO  [b91a87e5a249] [nio-8080-exec-4] c.d.m.config.RequestLogInterceptor       : <<< GET /api/report/dailyTrend | 200 | 1022ms
+2026-05-13 14:20:36.440 INFO  [ed4d5866c328] [nio-8080-exec-1] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/ocrConfig?accountId=2054443847372046337 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:36.482 DEBUG [ed4d5866c328] [nio-8080-exec-1] c.d.m.m.GameOcrConfigMapper.selectList   : ==>  Preparing: SELECT id,account_id,crop_x,crop_y,crop_width,crop_height,threshold_value,invert_colors,scale_factor,tesseract_psm,unit_suffix,create_time,update_time FROM game_ocr_config WHERE (account_id = ?) LIMIT 1
+2026-05-13 14:20:36.483 DEBUG [ed4d5866c328] [nio-8080-exec-1] c.d.m.m.GameOcrConfigMapper.selectList   : ==> Parameters: 2054443847372046337(Long)
+2026-05-13 14:20:36.532 DEBUG [ed4d5866c328] [nio-8080-exec-1] c.d.m.m.GameOcrConfigMapper.selectList   : <==      Total: 1
+2026-05-13 14:20:36.534 INFO  [ed4d5866c328] [nio-8080-exec-1] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/ocrConfig | 200 | 94ms
+2026-05-13 14:20:43.723 INFO  [f15635f9124d] [nio-8080-exec-7] c.d.m.config.RequestLogInterceptor       : >>> GET /api/account/list?pageNo=1&pageSize=100 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:43.723 INFO  [34baa09927f7] [nio-8080-exec-2] c.d.m.config.RequestLogInterceptor       : >>> GET /api/report/multiAccountSummary | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:43.758 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:43.759 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:43.765 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.G.selectList_mpCount             : ==>  Preparing: SELECT COUNT(*) AS total FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:43.765 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.G.selectList_mpCount             : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:43.790 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:43.790 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (status = ? AND id IN (?,?,?,?))
+2026-05-13 14:20:43.795 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 1(Integer), 2054437452602015745(Long), 2054439784865726466(Long), 2054439827807010817(Long), 2054443847372046337(Long)
+2026-05-13 14:20:43.801 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.G.selectList_mpCount             : <==      Total: 1
+2026-05-13 14:20:43.801 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account WHERE (user_id = ?) ORDER BY create_time DESC LIMIT ?
+2026-05-13 14:20:43.801 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long), 100(Long)
+2026-05-13 14:20:43.830 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:43.830 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:43.830 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==> Parameters: 2054437452602015745(Long)
+2026-05-13 14:20:43.830 DEBUG [f15635f9124d] [nio-8080-exec-7] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:43.835 INFO  [f15635f9124d] [nio-8080-exec-7] c.d.m.config.RequestLogInterceptor       : <<< GET /api/account/list | 200 | 112ms
+2026-05-13 14:20:43.864 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:43.864 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:43.864 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==> Parameters: 2054439784865726466(Long)
+2026-05-13 14:20:43.901 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:43.901 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:43.901 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==> Parameters: 2054439827807010817(Long)
+2026-05-13 14:20:43.935 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:43.935 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (account_id = ?) ORDER BY record_time DESC LIMIT 1
+2026-05-13 14:20:43.935 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : ==> Parameters: 2054443847372046337(Long)
+2026-05-13 14:20:43.978 DEBUG [34baa09927f7] [nio-8080-exec-2] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:43.985 INFO  [34baa09927f7] [nio-8080-exec-2] c.d.m.config.RequestLogInterceptor       : <<< GET /api/report/multiAccountSummary | 200 | 262ms
+2026-05-13 14:20:44.007 INFO  [3a519acb457e] [nio-8080-exec-3] c.d.m.config.RequestLogInterceptor       : >>> GET /api/report/dailyTrend?startDate=2026-05-06&endDate=2026-05-13 | IP=0:0:0:0:0:0:0:1
+2026-05-13 14:20:44.017 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id FROM game_account WHERE (user_id = ?)
+2026-05-13 14:20:44.018 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 2054403907389030401(Long)
+2026-05-13 14:20:44.091 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:44.091 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:44.095 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054437452602015745(Long)
+2026-05-13 14:20:44.193 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:44.193 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:44.193 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:44.297 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:44.299 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:44.300 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439784865726466(Long)
+2026-05-13 14:20:44.405 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:44.405 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:44.405 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:44.509 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:44.509 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:44.509 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054439827807010817(Long)
+2026-05-13 14:20:44.610 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:44.610 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:44.610 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:44.706 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:44.707 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==>  Preparing: SELECT id,account_id,screenshot_log_id,balance,balance_change,record_time,source,create_time FROM game_balance_record WHERE (record_time >= ? AND record_time <= ? AND account_id = ?) ORDER BY record_time ASC
+2026-05-13 14:20:44.708 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : ==> Parameters: 2026-05-06 00:00:00.0(Timestamp), 2026-05-13 23:59:59.999(Timestamp), 2054443847372046337(Long)
+2026-05-13 14:20:44.812 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.G.selectList                     : <==      Total: 0
+2026-05-13 14:20:44.813 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==>  Preparing: SELECT id,account_name,game_name,device_id,device_token,device_model,status,user_id,remark,create_by,create_time,update_by,update_time FROM game_account
+2026-05-13 14:20:44.814 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : ==> Parameters: 
+2026-05-13 14:20:44.925 DEBUG [3a519acb457e] [nio-8080-exec-3] c.d.m.m.GameAccountMapper.selectList     : <==      Total: 4
+2026-05-13 14:20:44.927 INFO  [3a519acb457e] [nio-8080-exec-3] c.d.m.config.RequestLogInterceptor       : <<< GET /api/report/dailyTrend | 200 | 920ms

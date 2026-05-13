@@ -9,3 +9,5 @@ build
 *.md
 uploads
 .env
+
+logs

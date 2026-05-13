@@ -48,7 +48,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="单位后缀">
-          <el-input v-model="form.unitSuffix" placeholder="如 万、W、K" style="width: 200px;" />
+          <el-select v-model="form.unitSuffix" style="width: 200px;" clearable>
+            <el-option value="" label="自动识别" />
+            <el-option value="万" label="万 (×10000)" />
+            <el-option value="W" label="W (×10000)" />
+            <el-option value="K" label="K (×1000)" />
+            <el-option value="M" label="M (×1000000)" />
+          </el-select>
+          <div class="form-tip">默认自动从截图中识别单位，仅在识别不准时手动指定</div>
         </el-form-item>
 
         <el-form-item>
@@ -76,7 +83,7 @@ const form = ref({
   accountId: Number(accountId),
   cropX: 0, cropY: 0, cropWidth: 200, cropHeight: 60,
   scaleFactor: 2.0, thresholdValue: 128, invertColors: 0,
-  tesseractPsm: 7, unitSuffix: '万'
+  tesseractPsm: 7, unitSuffix: ''
 })
 
 async function loadConfig() {
@@ -103,3 +110,12 @@ async function handleSave() {
 
 onMounted(loadConfig)
 </script>
+
+<style scoped>
+.form-tip {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+</style>
