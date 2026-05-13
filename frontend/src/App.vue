@@ -48,6 +48,14 @@
       <el-header class="app-header">
         <h3 class="header-title">{{ $route.meta.title }}</h3>
         <div class="header-right">
+          <el-button
+            :type="isRmb ? 'primary' : 'default'"
+            size="small"
+            class="currency-toggle"
+            @click="toggleCurrency"
+          >
+            {{ isRmb ? '¥ 人民币' : ' 游戏币' }}
+          </el-button>
           <span class="header-user">{{ userInfo.nickname || userInfo.username }}</span>
           <el-button link class="header-logout" @click="handleLogout">
             <el-icon><SwitchButton /></el-icon>
@@ -69,6 +77,9 @@ import {
   Monitor, User, Wallet, Picture, DataAnalysis,
   Fold, Expand, UserFilled, SwitchButton
 } from '@element-plus/icons-vue'
+import { useCurrency } from './composables/useCurrency'
+
+const { isRmb, toggleCurrency } = useCurrency()
 
 const router = useRouter()
 const isCollapsed = ref(false)

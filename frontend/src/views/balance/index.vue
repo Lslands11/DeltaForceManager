@@ -98,6 +98,9 @@ import { EditPen } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { getBalanceList, manualInput, deleteBalance } from '../../api/balance'
 import { getAccountList } from '../../api/account'
+import { useCurrency } from '../../composables/useCurrency'
+
+const { formatMoney } = useCurrency()
 
 const loading = ref(false)
 const submitting = ref(false)
@@ -114,11 +117,6 @@ const accountMap = computed(() => {
   accountOptions.value.forEach(a => { map[a.id] = a.accountName })
   return map
 })
-
-function formatMoney(val) {
-  if (val == null) return '0.00'
-  return Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function sourceLabel(s) {
   return { 1: 'OCR识别', 2: '手动录入', 3: '人工校正' }[s] || '未知'

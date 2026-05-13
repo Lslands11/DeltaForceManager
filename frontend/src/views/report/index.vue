@@ -143,6 +143,9 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { getDailyTrend, getProfitSummary, getAccountTrend } from '../../api/report'
 import { getAccountList } from '../../api/account'
+import { useCurrency } from '../../composables/useCurrency'
+
+const { isRmb, formatMoney, toRmb } = useCurrency()
 
 const activeTab = ref('daily')
 const accountOptions = ref([])
@@ -171,11 +174,6 @@ let profitChart = null
 const trendQuery = ref({ accountId: null, days: 30 })
 const trendChartRef = ref(null)
 let trendChart = null
-
-function formatMoney(val) {
-  if (val == null) return '0.00'
-  return Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function formatDate(d) {
   return d.toISOString().split('T')[0]
@@ -216,7 +214,7 @@ function renderDailyChart(data) {
   const series = Object.entries(accountMap).map(([name, dateMap]) => ({
     name,
     type: 'bar',
-    data: dates.map(d => dateMap[d] || 0)
+    data: dates.map(d => isRmb.value ? toRmb(dateMap[d] || 0) : (dateMap[d] || 0))
   }))
 
   dailyChart.setOption({
@@ -224,7 +222,7 @@ function renderDailyChart(data) {
     legend: { data: Object.keys(accountMap), top: 0 },
     grid: { top: 30, right: 20, bottom: 30, left: 60 },
     xAxis: { type: 'category', data: dates },
-    yAxis: { type: 'value' },
+    yAxis: { type: 'value', axisLabel: { formatter: v => formatMoney(v) } },
     series
   }, true)
 }
@@ -249,11 +247,11 @@ function renderProfitChart(accounts) {
       type: 'category',
       data: accounts.map(a => a.accountName)
     },
-    yAxis: { type: 'value' },
+    yAxis: { type: 'value', axisLabel: { formatter: v => formatMoney(v) } },
     series: [{
       type: 'bar',
       data: accounts.map(a => ({
-        value: Number(a.profit),
+        value: isRmb.value ? toRmb(a.profit) : Number(a.profit),
         itemStyle: { color: a.profit >= 0 ? '#10b981' : '#ef4444' }
       }))
     }]
@@ -285,13 +283,13 @@ function renderTrendChart(data) {
     },
     yAxis: {
       type: 'value',
-      axisLabel: { formatter: v => (v / 10000).toFixed(1) + 'w' }
+      axisLabel: { formatter: v => formatMoney(v) }
     },
     series: [{
       name: data.accountName || '余额',
       type: 'line',
       smooth: true,
-      data: points.map(p => Number(p.balance)),
+      data: points.map(p => isRmb.value ? toRmb(p.balance) : Number(p.balance)),
       areaStyle: { opacity: 0.1 }
     }]
   }, true)

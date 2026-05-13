@@ -79,6 +79,9 @@ import * as echarts from 'echarts'
 import { getMultiAccountSummary } from '../../api/report'
 import { getDailyTrend } from '../../api/report'
 import { getAccountList } from '../../api/account'
+import { useCurrency } from '../../composables/useCurrency'
+
+const { isRmb, formatMoney, toRmb } = useCurrency()
 
 const summary = ref({ totalBalance: 0, totalDailyProfit: 0, accounts: [] })
 const trendAccountId = ref(null)
@@ -89,11 +92,6 @@ let chart = null
 const onlineCount = computed(() =>
   (summary.value.accounts || []).filter(a => a.status === 'online').length
 )
-
-function formatMoney(val) {
-  if (val == null) return '0.00'
-  return Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function formatTime(date) {
   if (!date) return '-'
@@ -160,7 +158,7 @@ function renderChart(data) {
     name,
     type: 'line',
     smooth: true,
-    data: dates.map(d => dateMap[d] != null ? Number(dateMap[d]) : null),
+    data: dates.map(d => dateMap[d] != null ? (isRmb.value ? toRmb(dateMap[d]) : Number(dateMap[d])) : null),
     symbolSize: 6
   }))
 
@@ -169,7 +167,7 @@ function renderChart(data) {
     legend: { data: Object.keys(accountMap), top: 0 },
     grid: { top: 30, right: 20, bottom: 30, left: 60 },
     xAxis: { type: 'category', data: dates },
-    yAxis: { type: 'value', axisLabel: { formatter: (v) => (v / 10000).toFixed(1) + 'w' } },
+    yAxis: { type: 'value', axisLabel: { formatter: (v) => formatMoney(v) } },
     series
   }, true)
 }

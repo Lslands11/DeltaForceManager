@@ -109,7 +109,7 @@
       <div v-for="item in pendingList" :key="item.id" class="pending-item">
         <div class="pending-info">
           <div><strong>ID:</strong> {{ item.id }}</div>
-          <div><strong>OCR识别:</strong> {{ item.parsedAmount || '-' }}</div>
+          <div><strong>OCR识别:</strong> {{ item.parsedAmount != null ? formatMoney(item.parsedAmount) : '-' }}</div>
           <div><strong>置信度:</strong> {{ item.ocrConfidence || '-' }}%</div>
           <div><strong>原文:</strong> {{ item.ocrRawText || '-' }}</div>
           <div><strong>上传时间:</strong> {{ item.uploadTime }}</div>
@@ -154,7 +154,7 @@
     <!-- Review Dialog -->
     <el-dialog v-model="reviewVisible" title="人工审核" width="400px">
       <p style="margin-bottom: var(--space-md); color: var(--color-text-secondary);">
-        截图ID: {{ reviewItem?.id }}，OCR识别: {{ reviewItem?.parsedAmount || '-' }}
+        截图ID: {{ reviewItem?.id }}，OCR识别: {{ reviewItem?.parsedAmount != null ? formatMoney(reviewItem?.parsedAmount) : '-' }}
       </p>
       <el-form label-width="80px">
         <el-form-item label="正确金额" required>
@@ -174,6 +174,9 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getScreenshotList, getPendingReview, reviewScreenshot, reprocessScreenshot, uploadScreenshot } from '../../api/screenshot'
 import { getAccountList } from '../../api/account'
+import { useCurrency } from '../../composables/useCurrency'
+
+const { formatMoney } = useCurrency()
 
 const loading = ref(false)
 const submitting = ref(false)
@@ -199,11 +202,6 @@ const accountMap = computed(() => {
   accountOptions.value.forEach(a => { map[a.id] = a.accountName })
   return map
 })
-
-function formatMoney(val) {
-  if (val == null) return '0.00'
-  return Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
 
 function statusLabel(s) {
   return { 0: '待处理', 1: '成功', 2: '失败', 3: '待审核' }[s] || '未知'
