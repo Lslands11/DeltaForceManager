@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { getMultiAccountSummary } from '../../api/report'
@@ -97,6 +97,7 @@ const displayedAccounts = computed(() => {
 const trendAccountId = ref(null)
 const trendChartRef = ref(null)
 const accountOptions = ref([])
+const trendDataCache = ref([])
 let chart = null
 
 const onlineCount = computed(() =>
@@ -141,7 +142,8 @@ async function loadTrend() {
     }
 
     const res = await getDailyTrend(params)
-    renderChart(res.result || [])
+    trendDataCache.value = res.result || []
+    renderChart(trendDataCache.value)
   } catch (e) {
     console.error(e)
   }
@@ -186,6 +188,10 @@ onMounted(async () => {
   await Promise.all([loadSummary(), loadAccounts()])
   await loadTrend()
   window.addEventListener('resize', () => chart?.resize())
+})
+
+watch(isRmb, () => {
+  if (trendDataCache.value.length) renderChart(trendDataCache.value)
 })
 
 onBeforeUnmount(() => {

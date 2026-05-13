@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import { getDailyTrend, getProfitSummary, getAccountTrend } from '../../api/report'
 import { getAccountList } from '../../api/account'
@@ -173,6 +173,7 @@ let profitChart = null
 // Account Trend
 const trendQuery = ref({ accountId: null, days: 30 })
 const trendChartRef = ref(null)
+const accountTrendCache = ref({})
 let trendChart = null
 
 function formatDate(d) {
@@ -183,6 +184,10 @@ async function loadAccounts() {
   try {
     const res = await getAccountList({ pageNo: 1, pageSize: 100 })
     accountOptions.value = res.result.records || []
+    if (accountOptions.value.length && !trendQuery.value.accountId) {
+      trendQuery.value.accountId = accountOptions.value[0].id
+      loadAccountTrend()
+    }
   } catch (e) { console.error(e) }
 }
 
@@ -262,9 +267,9 @@ async function loadAccountTrend() {
   if (!trendQuery.value.accountId) return
   try {
     const res = await getAccountTrend(trendQuery.value)
-    const data = res.result || {}
+    accountTrendCache.value = res.result || {}
     await nextTick()
-    renderTrendChart(data)
+    renderTrendChart(accountTrendCache.value)
   } catch (e) { console.error(e) }
 }
 
@@ -272,7 +277,22 @@ function renderTrendChart(data) {
   if (!trendChartRef.value) return
   if (!trendChart) trendChart = echarts.init(trendChartRef.value)
 
-  const points = data.points || []
+  let points = data.points || []
+  let accountName = data.accountName || '余额'
+
+  // 无数据时生成占位日期和零值
+  if (points.length === 0) {
+    const days = trendQuery.value.days || 30
+    const dates = []
+    const now = new Date()
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now)
+      d.setDate(d.getDate() - i)
+      dates.push(d.toISOString().split('T')[0])
+    }
+    points = dates.map(dt => ({ datetime: dt, balance: 0 }))
+  }
+
   trendChart.setOption({
     tooltip: { trigger: 'axis' },
     grid: { top: 20, right: 20, bottom: 30, left: 60 },
@@ -286,7 +306,7 @@ function renderTrendChart(data) {
       axisLabel: { formatter: v => formatMoney(v) }
     },
     series: [{
-      name: data.accountName || '余额',
+      name: accountName,
       type: 'line',
       smooth: true,
       data: points.map(p => isRmb.value ? toRmb(p.balance) : Number(p.balance)),
@@ -311,6 +331,12 @@ onMounted(async () => {
     profitChart?.resize()
     trendChart?.resize()
   })
+})
+
+watch(isRmb, () => {
+  if (dailyData.value.length) renderDailyChart(dailyData.value)
+  if (profitData.value.accounts?.length) renderProfitChart(profitData.value.accounts)
+  if (accountTrendCache.value.points?.length) renderTrendChart(accountTrendCache.value)
 })
 
 onBeforeUnmount(() => {
