@@ -27,6 +27,10 @@
           <el-icon><User /></el-icon>
           <template #title>账号管理</template>
         </el-menu-item>
+        <el-menu-item index="/ocr-presets">
+          <el-icon><Setting /></el-icon>
+          <template #title>OCR预设</template>
+        </el-menu-item>
         <el-menu-item index="/balances">
           <el-icon><Wallet /></el-icon>
           <template #title>余额记录</template>
@@ -75,7 +79,7 @@ import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   Monitor, User, Wallet, Picture, DataAnalysis,
-  Fold, Expand, UserFilled, SwitchButton
+  Fold, Expand, UserFilled, SwitchButton, Setting
 } from '@element-plus/icons-vue'
 import { useCurrency } from './composables/useCurrency'
 

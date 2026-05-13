@@ -24,10 +24,22 @@ export function generateToken() {
   return request.post('/account/generateToken')
 }
 
-export function getOcrConfig(accountId) {
-  return request.get('/account/ocrConfig', { params: { accountId } })
+export function getOcrGameNames() {
+  return request.get('/account/ocrGameNames')
+}
+
+export function getOcrPresetList() {
+  return request.get('/account/ocrPresetList')
+}
+
+export function getOcrConfig(gameName) {
+  return request.get('/account/ocrConfig', { params: { gameName } })
 }
 
 export function saveOcrConfig(data) {
   return request.post('/account/saveOcrConfig', data)
+}
+
+export function deleteOcrPreset(id) {
+  return request.delete('/account/deleteOcrPreset', { params: { id } })
 }

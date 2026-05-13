@@ -76,5 +76,12 @@ CREATE TABLE IF NOT EXISTS `game_balance_record` (
   KEY `idx_record_time` (`record_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='余额记录';
 
--- 升级：unit_suffix 改为默认 NULL（自动识别）
--- ALTER TABLE `game_ocr_config` MODIFY COLUMN `unit_suffix` varchar(16) DEFAULT NULL COMMENT '金额单位后缀(万/K/M等, NULL=自动识别)';
+-- =============================================
+-- OCR配置重构：从账号绑定改为游戏类型绑定
+-- =============================================
+ALTER TABLE `game_ocr_config` DROP INDEX `uk_account_id`;
+ALTER TABLE `game_ocr_config` DROP COLUMN `account_id`;
+ALTER TABLE `game_ocr_config` ADD COLUMN `game_name` varchar(64) NOT NULL COMMENT '游戏名称' AFTER `id`;
+ALTER TABLE `game_ocr_config` ADD UNIQUE KEY `uk_game_name` (`game_name`);
+ALTER TABLE `game_ocr_config` COMMENT='OCR预设配置';
+

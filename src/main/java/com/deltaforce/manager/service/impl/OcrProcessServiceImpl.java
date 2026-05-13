@@ -2,6 +2,7 @@ package com.deltaforce.manager.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import com.deltaforce.manager.constant.GameMonitorConstants;
+import com.deltaforce.manager.entity.GameAccount;
 import com.deltaforce.manager.entity.GameBalanceRecord;
 import com.deltaforce.manager.entity.GameOcrConfig;
 import com.deltaforce.manager.entity.GameScreenshotLog;
@@ -27,6 +28,8 @@ public class OcrProcessServiceImpl implements IOcrProcessService {
     @Resource
     private IGameOcrConfigService ocrConfigService;
     @Resource
+    private IGameAccountService gameAccountService;
+    @Resource
     private IGameBalanceRecordService balanceRecordService;
     @Resource
     private OcrPipeline ocrPipeline;
@@ -51,10 +54,18 @@ public class OcrProcessServiceImpl implements IOcrProcessService {
             return;
         }
 
-        GameOcrConfig ocrConfig = ocrConfigService.getByAccountId(screenshotLog.getAccountId());
+        GameAccount account = gameAccountService.getById(screenshotLog.getAccountId());
+        if (account == null || account.getGameName() == null || account.getGameName().isEmpty()) {
+            screenshotLog.setOcrStatus(GameMonitorConstants.OCR_STATUS_FAILED);
+            screenshotLog.setErrorMessage("账号未关联游戏类型");
+            screenshotLogService.updateById(screenshotLog);
+            return;
+        }
+
+        GameOcrConfig ocrConfig = ocrConfigService.getByGameName(account.getGameName());
         if (ocrConfig == null) {
             screenshotLog.setOcrStatus(GameMonitorConstants.OCR_STATUS_FAILED);
-            screenshotLog.setErrorMessage("未配置OCR参数");
+            screenshotLog.setErrorMessage("未配置OCR参数: " + account.getGameName());
             screenshotLogService.updateById(screenshotLog);
             return;
         }

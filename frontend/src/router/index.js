@@ -24,10 +24,10 @@ const routes = [
     meta: { title: '账号管理' }
   },
   {
-    path: '/accounts/:id/ocr-config',
-    name: 'OcrConfig',
-    component: () => import('../views/account/ocr-config.vue'),
-    meta: { title: 'OCR 配置' }
+    path: '/ocr-presets',
+    name: 'OcrPresets',
+    component: () => import('../views/ocr-preset/index.vue'),
+    meta: { title: 'OCR 预设配置' }
   },
   {
     path: '/balances',

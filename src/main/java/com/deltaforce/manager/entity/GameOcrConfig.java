@@ -23,7 +23,7 @@ public class GameOcrConfig implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-    private Long accountId;
+    private String gameName;
 
     private Integer cropX;
 

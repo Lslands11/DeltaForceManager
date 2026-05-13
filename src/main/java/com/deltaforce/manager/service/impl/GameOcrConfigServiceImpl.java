@@ -7,13 +7,24 @@ import com.deltaforce.manager.mapper.GameOcrConfigMapper;
 import com.deltaforce.manager.service.IGameOcrConfigService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class GameOcrConfigServiceImpl extends ServiceImpl<GameOcrConfigMapper, GameOcrConfig> implements IGameOcrConfigService {
 
     @Override
-    public GameOcrConfig getByAccountId(Long accountId) {
+    public GameOcrConfig getByGameName(String gameName) {
         return getOne(new LambdaQueryWrapper<GameOcrConfig>()
-                .eq(GameOcrConfig::getAccountId, accountId)
+                .eq(GameOcrConfig::getGameName, gameName)
                 .last("LIMIT 1"), false);
+    }
+
+    @Override
+    public List<String> listGameNames() {
+        return listObjs(new LambdaQueryWrapper<GameOcrConfig>()
+                .select(GameOcrConfig::getGameName), Object::toString)
+                .stream()
+                .collect(Collectors.toList());
     }
 }

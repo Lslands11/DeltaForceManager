@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -99,11 +100,11 @@ public class GameAccountController {
     }
 
     @GetMapping("/ocrConfig")
-    public Result<GameOcrConfig> getOcrConfig(@RequestParam("accountId") Long accountId) {
-        GameOcrConfig config = ocrConfigService.getByAccountId(accountId);
+    public Result<GameOcrConfig> getOcrConfig(@RequestParam("gameName") String gameName) {
+        GameOcrConfig config = ocrConfigService.getByGameName(gameName);
         if (config == null) {
             config = new GameOcrConfig();
-            config.setAccountId(accountId);
+            config.setGameName(gameName);
             config.setCropX(0);
             config.setCropY(0);
             config.setCropWidth(200);
@@ -119,7 +120,7 @@ public class GameAccountController {
 
     @PostMapping("/saveOcrConfig")
     public Result<String> saveOcrConfig(@RequestBody GameOcrConfig ocrConfig) {
-        GameOcrConfig existing = ocrConfigService.getByAccountId(ocrConfig.getAccountId());
+        GameOcrConfig existing = ocrConfigService.getByGameName(ocrConfig.getGameName());
         if (existing != null) {
             ocrConfig.setId(existing.getId());
             ocrConfigService.updateById(ocrConfig);
@@ -127,5 +128,21 @@ public class GameAccountController {
             ocrConfigService.save(ocrConfig);
         }
         return Result.OK("保存成功!");
+    }
+
+    @GetMapping("/ocrGameNames")
+    public Result<List<String>> ocrGameNames() {
+        return Result.OK(ocrConfigService.listGameNames());
+    }
+
+    @GetMapping("/ocrPresetList")
+    public Result<List<GameOcrConfig>> ocrPresetList() {
+        return Result.OK(ocrConfigService.list());
+    }
+
+    @DeleteMapping("/deleteOcrPreset")
+    public Result<String> deleteOcrPreset(@RequestParam("id") Long id) {
+        ocrConfigService.removeById(id);
+        return Result.OK("删除成功!");
     }
 }

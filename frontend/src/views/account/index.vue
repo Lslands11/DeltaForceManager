@@ -46,7 +46,6 @@
         <el-table-column label="操作" width="220" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" size="small" @click="openDialog(row)">编辑</el-button>
-            <el-button link type="primary" size="small" @click="$router.push(`/accounts/${row.id}/ocr-config`)">OCR配置</el-button>
             <el-popconfirm title="确定删除该账号？" @confirm="handleDelete(row.id)">
               <template #reference>
                 <el-button link type="danger" size="small">删除</el-button>
@@ -76,7 +75,9 @@
           <el-input v-model="form.accountName" placeholder="请输入账号名称" />
         </el-form-item>
         <el-form-item label="游戏名称">
-          <el-input v-model="form.gameName" placeholder="请输入游戏名称" />
+          <el-select v-model="form.gameName" placeholder="请选择游戏" style="width: 100%;">
+            <el-option v-for="name in gameNameOptions" :key="name" :label="name" :value="name" />
+          </el-select>
         </el-form-item>
         <el-form-item label="设备型号">
           <el-input v-model="form.deviceModel" placeholder="请输入设备型号" />
@@ -107,13 +108,14 @@
 import { ref, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { getAccountList, addAccount, editAccount, deleteAccount, generateToken } from '../../api/account'
+import { getAccountList, addAccount, editAccount, deleteAccount, generateToken, getOcrGameNames } from '../../api/account'
 
 const loading = ref(false)
 const submitting = ref(false)
 const tableData = ref([])
 const total = ref(0)
 const dialogVisible = ref(false)
+const gameNameOptions = ref([])
 
 const query = ref({ pageNo: 1, pageSize: 10, accountName: '', status: null })
 
@@ -182,5 +184,17 @@ async function handleDelete(id) {
   }
 }
 
-onMounted(loadData)
+async function loadGameNames() {
+  try {
+    const res = await getOcrGameNames()
+    gameNameOptions.value = res.result || []
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+onMounted(() => {
+  loadData()
+  loadGameNames()
+})
 </script>
