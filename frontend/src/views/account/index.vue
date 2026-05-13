@@ -31,7 +31,6 @@
     <!-- Table -->
     <div class="table-container">
       <el-table :data="tableData" v-loading="loading" stripe>
-        <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="accountName" label="账号名称" min-width="120" />
         <el-table-column prop="gameName" label="游戏名称" min-width="120" />
         <el-table-column prop="deviceModel" label="设备型号" min-width="120" />
