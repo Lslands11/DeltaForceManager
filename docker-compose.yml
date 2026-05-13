@@ -1,0 +1,44 @@
+services:
+  # =============================================
+  # 后端 (Spring Boot + Tesseract OCR)
+  # =============================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: deltaforce-backend
+    restart: always
+    environment:
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-kskblzdjdwkzkbl}
+      JWT_SECRET: ${JWT_SECRET:-DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction}
+    ports:
+      - "8080:8080"
+    volumes:
+      - upload_data:/app/uploads/screenshots
+    networks:
+      - deltaforce-net
+
+  # =============================================
+  # 前端 (Nginx)
+  # =============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: deltaforce-frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - deltaforce-net
+
+volumes:
+  upload_data:
+    driver: local
+
+networks:
+  deltaforce-net:
+    driver: bridge

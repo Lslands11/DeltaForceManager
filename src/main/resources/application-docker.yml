@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.110.91.251:3306/delta_force_manager?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:kskblzdjdwkzkbl}
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+game-monitor:
+  tesseract:
+    datapath: /usr/share/tessdata
+    language: eng
+  upload:
+    path: /app/uploads/screenshots
+
+jwt:
+  secret: ${JWT_SECRET:DeltaForceManagerJwtSecretKey2024PleaseChangeInProduction}
+  expiration: 86400000
