@@ -30,7 +30,7 @@
     <!-- Account Cards -->
     <div class="grid-3 section-gap">
       <div
-        v-for="account in summary.accounts"
+        v-for="account in displayedAccounts"
         :key="account.accountId"
         class="card card-interactive account-card"
       >
@@ -54,6 +54,10 @@
         </div>
       </div>
     </div>
+    <div v-if="(summary.accounts?.length || 0) > 3" class="collapse-toggle" @click="accountsCollapsed = !accountsCollapsed">
+      <span>{{ accountsCollapsed ? '展开全部 ' + summary.accounts.length + ' 个账号' : '收起' }}</span>
+      <el-icon><ArrowDown v-if="accountsCollapsed" /><ArrowUp v-else /></el-icon>
+    </div>
 
     <!-- Trend Chart -->
     <div class="card">
@@ -75,6 +79,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { getMultiAccountSummary } from '../../api/report'
 import { getDailyTrend } from '../../api/report'
@@ -84,6 +89,11 @@ import { useCurrency } from '../../composables/useCurrency'
 const { isRmb, formatMoney, toRmb } = useCurrency()
 
 const summary = ref({ totalBalance: 0, totalDailyProfit: 0, accounts: [] })
+const accountsCollapsed = ref(true)
+const displayedAccounts = computed(() => {
+  const list = summary.value.accounts || []
+  return accountsCollapsed.value ? list.slice(0, 3) : list
+})
 const trendAccountId = ref(null)
 const trendChartRef = ref(null)
 const accountOptions = ref([])
@@ -242,5 +252,21 @@ onBeforeUnmount(() => {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text);
+}
+
+.collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.collapse-toggle:hover {
+  color: var(--color-primary);
 }
 </style>

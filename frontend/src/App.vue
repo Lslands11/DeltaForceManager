@@ -19,6 +19,10 @@
           <el-icon><Monitor /></el-icon>
           <template #title>总览面板</template>
         </el-menu-item>
+        <el-menu-item index="/reports">
+          <el-icon><DataAnalysis /></el-icon>
+          <template #title>报表统计</template>
+        </el-menu-item>
         <el-menu-item index="/accounts">
           <el-icon><User /></el-icon>
           <template #title>账号管理</template>
@@ -30,10 +34,6 @@
         <el-menu-item index="/screenshots">
           <el-icon><Picture /></el-icon>
           <template #title>截图日志</template>
-        </el-menu-item>
-        <el-menu-item index="/reports">
-          <el-icon><DataAnalysis /></el-icon>
-          <template #title>报表统计</template>
         </el-menu-item>
         <el-menu-item v-if="isAdmin" index="/users">
           <el-icon><UserFilled /></el-icon>
@@ -71,8 +71,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import {
   Monitor, User, Wallet, Picture, DataAnalysis,
   Fold, Expand, UserFilled, SwitchButton
@@ -82,17 +82,23 @@ import { useCurrency } from './composables/useCurrency'
 const { isRmb, toggleCurrency } = useCurrency()
 
 const router = useRouter()
+const route = useRoute()
 const isCollapsed = ref(false)
 
-const userInfo = computed(() => {
+function loadUserInfo() {
   try {
     return JSON.parse(localStorage.getItem('userInfo') || '{}')
   } catch {
     return {}
   }
-})
+}
 
+const userInfo = ref(loadUserInfo())
 const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
+
+watch(() => route.path, () => {
+  userInfo.value = loadUserInfo()
+})
 
 function handleLogout() {
   localStorage.removeItem('token')
