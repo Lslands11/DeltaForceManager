@@ -8,6 +8,9 @@ import com.deltaforce.manager.mapper.GameAccountMapper;
 import com.deltaforce.manager.service.IGameAccountService;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +29,24 @@ public class GameAccountServiceImpl extends ServiceImpl<GameAccountMapper, GameA
     @Override
     public String generateDeviceToken() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    @Override
+    public String generateDeviceId(String deviceName) {
+        if (deviceName == null || deviceName.isBlank()) {
+            deviceName = "default";
+        }
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(deviceName.trim().getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                hex.append(String.format("%02x", hash[i]));
+            }
+            return "DN-" + hex.toString().toUpperCase();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not available", e);
+        }
     }
 
     @Override

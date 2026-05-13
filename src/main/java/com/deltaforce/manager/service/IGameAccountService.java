@@ -11,5 +11,7 @@ public interface IGameAccountService extends IService<GameAccount> {
 
     String generateDeviceToken();
 
+    String generateDeviceId(String deviceName);
+
     List<Long> getAccountIdsByUserId(Long userId);
 }

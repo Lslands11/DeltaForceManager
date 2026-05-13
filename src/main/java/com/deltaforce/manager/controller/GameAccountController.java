@@ -58,6 +58,9 @@ public class GameAccountController {
         if (gameAccount.getDeviceToken() == null || gameAccount.getDeviceToken().isEmpty()) {
             gameAccount.setDeviceToken(gameAccountService.generateDeviceToken());
         }
+        if (gameAccount.getDeviceId() == null || gameAccount.getDeviceId().isEmpty()) {
+            gameAccount.setDeviceId(gameAccountService.generateDeviceId(gameAccount.getDeviceModel()));
+        }
         // 非管理员添加账号时自动绑定到当前用户
         if (!SecurityUtil.isAdmin() && gameAccount.getUserId() == null) {
             gameAccount.setUserId(SecurityUtil.getCurrentUserId());
