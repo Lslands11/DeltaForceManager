@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class BalanceTextParser {
 
     private static final Map<String, BigDecimal> UNIT_MULTIPLIERS = new HashMap<>();
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("([\\d,]+(?:\\.\\d+)?)\\s*([万WwKkMmBb]?)");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("([\\d,]+)\\s*([万WwKkMmBb]?)");
 
     static {
         UNIT_MULTIPLIERS.put("万", new BigDecimal("10000"));
@@ -81,6 +81,9 @@ public class BalanceTextParser {
                 .replace("s", "5")
                 .replace(" ", "");
         cleaned = cleaned.replaceAll("[^\\d.,万WwKkMmBb]", "");
+
+        // 游戏币为整数，OCR误识别的小数点全部视为千位分隔符
+        cleaned = cleaned.replace(".", "");
         return cleaned;
     }
 
