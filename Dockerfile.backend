@@ -23,7 +23,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         tesseract-ocr \
         tesseract-ocr-eng \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && TESSDATA_DIR=$(find /usr/share -name tessdata -type d | head -1) \
+    && mkdir -p /usr/share/tessdata \
+    && cp "$TESSDATA_DIR"/*.traineddata /usr/share/tessdata/
 
 WORKDIR /app
 
