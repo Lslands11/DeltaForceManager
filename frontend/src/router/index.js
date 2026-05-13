@@ -27,7 +27,7 @@ const routes = [
     path: '/ocr-presets',
     name: 'OcrPresets',
     component: () => import('../views/ocr-preset/index.vue'),
-    meta: { title: 'OCR 预设配置' }
+    meta: { title: 'OCR 预设配置', adminOnly: true }
   },
   {
     path: '/balances',

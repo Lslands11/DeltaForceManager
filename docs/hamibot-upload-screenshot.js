@@ -1,26 +1,25 @@
 /**
- * 游戏余额截图自动上传脚本（监听模式）
+ * 游戏余额截图自动上传脚本（手动触发）
  * 运行环境: Hamibot / Auto.js
  *
- * 触发方式: 监听游戏 App 启动，自动执行截图上传
+ * 触发方式: 手动点击运行，立即执行截图上传
  *
  * 使用说明:
  *   1. 修改下方 STATIC_CONFIG 中的 serverUrl 和 packageName
  *   2. 首次运行会弹出配置界面，输入 deviceToken 并保存
- *   3. 脚本常驻后台，当检测到游戏被打开时自动执行
- *   4. 不需要设置定时任务，只需要保持脚本在后台运行
+ *   3. 每次需要截图时手动运行脚本即可
  */
 
 // ==================== 静态配置（所有设备相同）====================
 var STATIC_CONFIG = {
     // 服务器地址
-    serverUrl: "http://192.168.1.100:8080",
+    serverUrl: "http://47.110.91.251/:80",
 
     // 游戏包名（用"应用包名查看器"获取）
     packageName: "com.example.game",
 
     // 游戏启动后等待加载的时间（秒）
-    gameLaunchWait: 30,
+    gameLaunchWait: 15,
 
     // 截图保存路径
     screenshotPath: "/sdcard/hamibot_balance.png",
@@ -41,12 +40,12 @@ function loadConfig() {
     try {
         var stored = hamibot.storage.get(STORAGE_KEY);
         if (stored) return JSON.parse(stored);
-    } catch(e) {}
+    } catch (e) { }
     try {
         var s = storages.create("balance_monitor");
         var stored = s.get(STORAGE_KEY);
         if (stored) return typeof stored === "string" ? JSON.parse(stored) : stored;
-    } catch(e) {}
+    } catch (e) { }
     return null;
 }
 
@@ -55,11 +54,11 @@ function saveConfig(config) {
     try {
         hamibot.storage.put(STORAGE_KEY, json);
         return;
-    } catch(e) {}
+    } catch (e) { }
     try {
         var s = storages.create("balance_monitor");
         s.put(STORAGE_KEY, config);
-    } catch(e) {
+    } catch (e) {
         log("保存配置失败: " + e);
     }
 }
@@ -93,7 +92,7 @@ function log(msg) {
 
 function toastMsg(msg) {
     log(msg);
-    try { toast(msg); } catch(e) {}
+    try { toast(msg); } catch (e) { }
 }
 
 // ================================================
@@ -253,7 +252,7 @@ function findUI() {
     log("=== 当前界面元素 ===");
     var allTexts = text().find();
     log("文字控件 (" + allTexts.length + " 个):");
-    allTexts.forEach(function(widget, index) {
+    allTexts.forEach(function (widget, index) {
         if (widget.text() && widget.text().trim()) {
             log("  [" + index + "] 文字: \"" + widget.text() + "\"");
         }
@@ -261,7 +260,7 @@ function findUI() {
 
     var allClickable = clickable(true).find();
     log("可点击控件 (" + allClickable.length + " 个):");
-    allClickable.forEach(function(widget, index) {
+    allClickable.forEach(function (widget, index) {
         var desc = widget.desc() || "";
         var txt = widget.text() || "";
         var bounds = widget.bounds();
@@ -306,7 +305,7 @@ function main() {
     // === 监听模式：检测前台应用 ===
     events.observeApp();
 
-    events.on("app_launched", function(packageName) {
+    events.on("app_launched", function (packageName) {
         // 只响应目标游戏
         if (packageName !== STATIC_CONFIG.packageName) {
             return;
@@ -325,7 +324,7 @@ function main() {
     });
 
     // 保持脚本运行
-    setInterval(function() {
+    setInterval(function () {
         // 心跳，保持后台存活
     }, 60000);
 }

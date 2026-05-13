@@ -27,7 +27,7 @@
           <el-icon><User /></el-icon>
           <template #title>账号管理</template>
         </el-menu-item>
-        <el-menu-item index="/ocr-presets">
+        <el-menu-item v-if="isAdmin" index="/ocr-presets">
           <el-icon><Setting /></el-icon>
           <template #title>OCR预设</template>
         </el-menu-item>
